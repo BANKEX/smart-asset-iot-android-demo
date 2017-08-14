@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+        "outputFile": "/Users/eugene/workspace/BankExDh/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
         "map": [
             {
                 "to": {
@@ -1510,7 +1510,7 @@
                     "endOffset": 6609
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/colors.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/colors.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -1529,7 +1529,7 @@
                     "endOffset": 6656
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/colors.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/colors.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -1548,7 +1548,7 @@
                     "endOffset": 6707
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/colors.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/colors.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -2194,7 +2194,7 @@
                     "endOffset": 8893
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/colors.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/colors.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -4968,7 +4968,7 @@
                     "endOffset": 59103
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/dimens.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -5215,7 +5215,7 @@
                     "endOffset": 60071
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/dimens.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -5519,7 +5519,7 @@
                     "endOffset": 61088
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/dimens.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -5538,7 +5538,7 @@
                     "endOffset": 61129
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/dimens.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/dimens.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -7077,7 +7077,7 @@
                     "endOffset": 65967
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 1,
                         "startColumn": 4,
@@ -7172,7 +7172,7 @@
                     "endOffset": 66543
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 6,
                         "startColumn": 4,
@@ -7191,7 +7191,7 @@
                     "endOffset": 66607
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,
@@ -7362,7 +7362,7 @@
                     "endOffset": 67705
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 7,
                         "startColumn": 4,
@@ -7381,7 +7381,7 @@
                     "endOffset": 67782
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -7400,7 +7400,7 @@
                     "endOffset": 67857
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -7438,7 +7438,7 @@
                     "endOffset": 67986
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -7495,7 +7495,7 @@
                     "endOffset": 68189
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/strings.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/strings.xml",
                     "position": {
                         "startLine": 8,
                         "startColumn": 4,
@@ -7631,7 +7631,7 @@
                     "endOffset": 69237
                 },
                 "from": {
-                    "file": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/values/styles.xml",
+                    "file": "/Users/eugene/workspace/BankExDh/app/src/main/res/values/styles.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,

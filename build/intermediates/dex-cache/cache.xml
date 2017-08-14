@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.5/60d059f5d2930ccd1ef03535b713fd9f933d1ba7/jackson-core-2.8.5.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="60d059f5d2930ccd1ef03535b713fd9f933d1ba7">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/jackson-core-2.8.5_49b534b10aa55b7844b8f4dbb592f6cad87e6347.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.9.9/f7b520c458572890807d143670c9b24f4de90897/joda-time-2.9.9.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="f7b520c458572890807d143670c9b24f4de90897">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/joda-time-2.9.9_7709697d791d15a3501911984cad78598a2af91b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/2f55f0054112dfdb9bee7d6c78c4e75a1b241721/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="6fdbd1bd6503815f2cef20a9a137005e5953aad1">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_0b92788bd63c82573dd84df30b17907db1ff94a0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/b16e789fdf62c8523e706e4e9f80916d3308b10e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="df90236d5329058ebd0d5f1b2c7db79349186bb5">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_0f3d7e65fbfbf51a30efc604a5d870f8fe959231.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/workspace/BankExDh/app/libs/azure-storage-android-1.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="1f24c15564011bebcec48b51e0dae8339b4af12b">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/azure-storage-android-1.1.0_757b4a8b08b54b1d467de51f9252008e5f4fd58f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/workspace/BankExDh/app/libs/rest-1.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="8710b573176fafc0bfc3850acf00a0678ad9146c">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/rest-1.0.0_6130d96390d595d515fd9ae0899a31cc3a2ce03c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/475bc7886c38d8406c427da82a4904824f807e8a/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="dd2e7a567260ca4e40c09ba330f4f2d318660554">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_900ae0061d531886367f717dde65f0926c16e19b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/6f4bcd9829c82a3fa7c039924278521cfdf82fd6/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="df733e6865d662899ec247e8c3dbff3e0961b8a7">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_ab3bd7295b008ad0f75b1c89ec19d21147caea0e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/17b0d697b0408a92bbe0091f03f93cfa1889e628/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_aefbf71df6c30d6ad50a16b90f61de1fa9e79a20.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/d6ce47817c3e77b1d27ead4cb0341ccddceb50e4/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="9daa13c380b137664418db19808af212c49d9934">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_19ade235d87767270e38699c51e67a0b706da9ab.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="c02601221d3415443520063447326463f75dfff4">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_05b1f22ef9926987a175164a9afb244c813fa618.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="d30ac0c26495d7264529e333cec806eec64dd6f3">
+        <dex dex="/Users/eugene/workspace/BankExDh/app/build/intermediates/pre-dexed/debug/classes_9b630116fd2c66a14da38260937c1c98e27aff49.jar" />
+    </item>
+
+</items>

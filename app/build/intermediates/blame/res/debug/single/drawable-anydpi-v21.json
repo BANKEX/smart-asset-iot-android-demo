@@ -1,10 +1,10 @@
 [
     {
-        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility_off.xml",
+        "merged": "/Users/eugene/workspace/BankExDh/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility_off.xml",
         "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-anydpi-v21/design_ic_visibility_off.xml"
     },
     {
-        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility.xml",
+        "merged": "/Users/eugene/workspace/BankExDh/app/build/intermediates/res/merged/debug/drawable-anydpi-v21/design_ic_visibility.xml",
         "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-anydpi-v21/design_ic_visibility.xml"
     }
 ]
