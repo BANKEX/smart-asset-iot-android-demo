@@ -200,8 +200,9 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         getLastLocation();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
-            Observable.just(this).map((ctx) -> presenter.createImageFile(this))
+            Observable.just(this)
                     .observeOn(Schedulers.io())
+                    .map((ctx) -> presenter.createImageFile(this))
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(photoFile -> {
                         if (photoFile != null) {
@@ -256,9 +257,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                         UIUtils.showInternetConnectionAlertDialog(this);
                         return;
                     }
-                    presenter.setOrientation();
-                    String imageUri = presenter.getCurrentPhotoPath();
-                    presenter.uploadFile(Uri.parse(imageUri), this);
+                    presenter.uploadFile(this);
                 } catch (Exception e) {
                     e.printStackTrace();
                     onPhotoUploadFail("");

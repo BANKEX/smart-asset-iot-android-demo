@@ -203,10 +203,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         }
     }
 
-    public void uploadFile(Uri filePath, Context context) {
-        Timber.d(filePath + "");
+    public void uploadFile(Context context) {
         Observable.just(context)
+                .observeOn(Schedulers.io())
                 .map((ctx) -> {
+                    ImageUtils.getInstance().setOrientation();
+                    Uri filePath = Uri.parse(ImageUtils.getInstance().getCurrentPhotoPath());
                     InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
                     int imageLength = imageStream.available();
                     String imageUrl = ImageManager.getInstance()
@@ -214,13 +216,13 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
                     return imageUrl;
                 })
-                .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe((s) -> {
                     this.link = s;
                     sendLocationNotification(location, s);
                     Timber.d(s);
                 }, t -> {
+                    t.printStackTrace();
                     clearLocationNotificationData();
                     EventBus.getDefault().post(UploadErrorEvent.newInstance());
                 });
