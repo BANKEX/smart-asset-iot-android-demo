@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/abc_action_bar_item_background_material.xml",
+        "source": "/Users/eugene/.android/build-cache/17b7fb3aeab7c1e4b3ee48362ae17a3684545dfc/output/res/drawable-v21/abc_action_bar_item_background_material.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/abc_btn_colored_material.xml",
+        "source": "/Users/eugene/.android/build-cache/17b7fb3aeab7c1e4b3ee48362ae17a3684545dfc/output/res/drawable-v21/abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/avd_show_password.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-v21/avd_show_password.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/design_bottom_navigation_item_background.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-v21/design_bottom_navigation_item_background.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/avd_hide_password.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-v21/avd_hide_password.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/design_password_eye.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/drawable-v21/design_password_eye.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/notification_action_background.xml",
+        "source": "/Users/eugene/.android/build-cache/b48f2e1d24f970a849476ed6d7ded5227dfd8614/output/res/drawable-v21/notification_action_background.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-v21/abc_edit_text_material.xml",
+        "source": "/Users/eugene/.android/build-cache/17b7fb3aeab7c1e4b3ee48362ae17a3684545dfc/output/res/drawable-v21/abc_edit_text_material.xml"
+    }
+]

@@ -1,0 +1,45 @@
+[
+    {
+        "outputFile": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v19/values-v19.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 42,
+                    "endOffset": 93
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-v19/values-v19.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 185,
+                        "endColumn": 42,
+                        "endOffset": 223
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 98,
+                    "endColumn": 41,
+                    "endOffset": 135
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-v19/values-v19.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 228,
+                        "endColumn": 41,
+                        "endOffset": 265
+                    }
+                }
+            }
+        ]
+    }
+]

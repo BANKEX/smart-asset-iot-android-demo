@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher_round.png",
+        "source": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher.png",
+        "source": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    }
+]

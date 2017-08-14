@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/anim-v21/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/anim-v21/design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/anim-v21/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/eugene/.android/build-cache/309c5531bcaaaae04fc0ff91fcfcd8365d00377f/output/res/anim-v21/design_bottom_sheet_slide_in.xml"
+    }
+]

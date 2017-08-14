@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_dark.xml",
+        "source": "/Users/eugene/.android/build-cache/17b7fb3aeab7c1e4b3ee48362ae17a3684545dfc/output/res/color-v11/abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/color-v11/abc_background_cache_hint_selector_material_light.xml",
+        "source": "/Users/eugene/.android/build-cache/17b7fb3aeab7c1e4b3ee48362ae17a3684545dfc/output/res/color-v11/abc_background_cache_hint_selector_material_light.xml"
+    }
+]

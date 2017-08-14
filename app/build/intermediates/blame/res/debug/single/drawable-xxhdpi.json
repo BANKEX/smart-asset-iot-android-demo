@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_file.png",
+        "source": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/drawable-xxhdpi/ic_file.png"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_provider.png",
+        "source": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/drawable-xxhdpi/ic_provider.png"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_folder.png",
+        "source": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/drawable-xxhdpi/ic_folder.png"
+    },
+    {
+        "merged": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_chooser.png",
+        "source": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/drawable-xxhdpi/ic_chooser.png"
+    }
+]

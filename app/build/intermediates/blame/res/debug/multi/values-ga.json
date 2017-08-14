@@ -1,0 +1,83 @@
+[
+    {
+        "outputFile": "/Users/eugene/workspace/smart-asset-iot-android-demo/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-ga/values-ga.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 56,
+                    "endOffset": 107
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-ga/values-ga.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 187,
+                        "endColumn": 56,
+                        "endOffset": 239
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 112,
+                    "endColumn": 62,
+                    "endOffset": 170
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-ga/values-ga.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 244,
+                        "endColumn": 62,
+                        "endOffset": 302
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 175,
+                    "endColumn": 90,
+                    "endOffset": 261
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-ga/values-ga.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 307,
+                        "endColumn": 90,
+                        "endOffset": 393
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 266,
+                    "endColumn": 91,
+                    "endOffset": 353
+                },
+                "from": {
+                    "file": "/Users/eugene/.android/build-cache/960cd779005297084a8e2d572c4d80b53b167ef1/output/res/values-ga/values-ga.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 398,
+                        "endColumn": 91,
+                        "endOffset": 485
+                    }
+                }
+            }
+        ]
+    }
+]
