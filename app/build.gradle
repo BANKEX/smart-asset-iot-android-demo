@@ -53,6 +53,7 @@ dependencies {
     compile "com.android.support:customtabs:${android_support}"
     compile "com.android.support:cardview-v7:${android_support}"
     compile "com.android.support:recyclerview-v7:${android_support}"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //Logging
     compile "com.jakewharton.timber:timber:${timber}"
     //ButterKnife
@@ -64,19 +65,24 @@ dependencies {
     compile "com.github.hotchemi:permissionsdispatcher:${permissions_dispatcher}"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:${permissions_dispatcher}"
 
-
+    //Retrofit
     compile "com.squareup.retrofit2:retrofit:${retrofit2}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttp_logging_interceptor}"
     compile "com.squareup.retrofit2:converter-scalars:${retrofit2}"
     compile "com.squareup.retrofit2:converter-gson:${retrofit2}"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    //Location service
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+
+    //Animation
     compile 'com.airbnb.android:lottie:2.1.0'
 
+    //EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
-
+    //FileChooser
     compile "andhradroid.dev:aFilechooser:${file_chooser}"
 
+    //Azure necessary library
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
     //RxJava
     compile "io.reactivex.rxjava2:rxandroid:${rxandroid}"

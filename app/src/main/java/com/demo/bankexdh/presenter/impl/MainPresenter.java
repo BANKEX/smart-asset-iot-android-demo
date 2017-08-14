@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.util.Log;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
 import com.demo.bankexdh.model.rest.RestHelper;
@@ -43,11 +45,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -55,9 +54,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,8 +61,9 @@ import timber.log.Timber;
 
 public class MainPresenter extends AbstractPresenter<NotificationView> implements ShakeDetector.Listener {
 
-    public static final String ACCELEROMETER = "ACCELEROMETER";
-    public static final String NOTIFICATION_TITLE = "SHAKE IT BABY";
+    private static final String ACCELEROMETER = "ACCELEROMETER";
+    private static final String NOTIFICATION_SHAKE_TITLE = "SHAKE IT BABY";
+    private static final String NOTIFICATION_IMAGE_TITLE = "I am here";
     private final ApiClient client;
 
     private DeviceNotificationApi deviceNotificationApi;
@@ -80,8 +77,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     public static final String IMAGE_TYPE = "image/*";
     private String currentPhotoPath;
     private String absolutImagePath;
-    public static final int FILE_SIZE_UNITS = 1024;
-    public static final int MAX_FILE_SIZE = 9;
+    private static final int FILE_SIZE_UNITS = 1024;
+    private static final int MAX_FILE_SIZE = 9;
+    private Location location;
 
     public MainPresenter() {
         client = RestHelper.getInstance().getApiClient();
@@ -230,22 +228,26 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         JsonStringWrapper jsonStringWrapper = new JsonStringWrapper();
         Shake shake = new Shake();
         shake.setShake(String.valueOf(shakeMessage));
-//        shake.setFakeData(genetateFakeData());
         shake.setShakenAt(DateTime.now().toString());
         jsonStringWrapper.setJsonString(new Gson().toJson(shake));
         wrapper.setParameters(jsonStringWrapper);
-        wrapper.setNotification(NOTIFICATION_TITLE);
+        wrapper.setNotification(NOTIFICATION_SHAKE_TITLE);
         return wrapper;
     }
 
-    private List<Long> genetateFakeData() {
-        List<Long> result = new ArrayList<>();
-        Random random = new Random();
-        int max = random.nextInt(200);
-        for (int i = 0; i < max; i++) {
-            result.add(random.nextLong());
-        }
-        return result;
+    private DeviceNotificationWrapper getImageNotification(String imageUrl, Double latitude, Double longitude) {
+        DeviceNotificationWrapper wrapper = new DeviceNotificationWrapper();
+        JsonStringWrapper jsonStringWrapper = new JsonStringWrapper();
+
+        ImageNotificationData data = new ImageNotificationData();
+        data.setImageUrl(imageUrl);
+        data.setLatitude(latitude);
+        data.setLongitude(longitude);
+
+        jsonStringWrapper.setJsonString(new Gson().toJson(data));
+        wrapper.setParameters(jsonStringWrapper);
+        wrapper.setNotification(NOTIFICATION_IMAGE_TITLE);
+        return wrapper;
     }
 
     @Override
@@ -253,37 +255,41 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(getDeviceId())) {
-                notificationCallInsert = deviceNotificationApi.insert(getDeviceId(), getShakeNotification("Shaked"));
-                notificationCallInsert.enqueue(new Callback<InsertNotification>() {
-                    @Override
-                    public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
-                        Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
-                        if (response.isSuccessful()) {
-                            if (!isViewNull()) {
-                                view.onNotificationSent();
-                            }
-                            isRegistrationInProgress.set(false);
-                        } else {
-                            if (!isViewNull()) view.onError();
-                            if (response.code() == 401) {
-                                if (!isRegistrationInProgress.get()) {
-                                    isRegistrationInProgress.set(true);
-                                    register();
-                                }
-                            }
-                        }
-                        executed = true;
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
-                        Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
-                        if (!isViewNull()) view.onError();
-                        executed = true;
-                    }
-                });
+                insertNotification(getShakeNotification("Shaked"));
             }
         }
+    }
+
+    private void insertNotification(DeviceNotificationWrapper notificationWrapper) {
+        notificationCallInsert = deviceNotificationApi.insert(getDeviceId(), notificationWrapper);
+        notificationCallInsert.enqueue(new Callback<InsertNotification>() {
+            @Override
+            public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
+                Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
+                if (response.isSuccessful()) {
+                    if (!isViewNull()) {
+                        view.onNotificationSent();
+                    }
+                    isRegistrationInProgress.set(false);
+                } else {
+                    if (!isViewNull()) view.onError();
+                    if (response.code() == 401) {
+                        if (!isRegistrationInProgress.get()) {
+                            isRegistrationInProgress.set(true);
+                            register();
+                        }
+                    }
+                }
+                executed = true;
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
+                Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
+                if (!isViewNull()) view.onError();
+                executed = true;
+            }
+        });
     }
 
     public void uploadFile(Uri filePath, Context context) {
@@ -299,7 +305,15 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     return imageUrl;
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe((s) -> Timber.d(s), Throwable::printStackTrace);
+                .subscribe((s) -> {
+
+                    if (location != null && !TextUtils.isEmpty(s)) {
+
+                        DeviceNotificationWrapper wrapper = getImageNotification(s, location.getLatitude(), location.getLongitude());
+                        insertNotification(wrapper);
+                    }
+                    Timber.d(s);
+                }, Throwable::printStackTrace);
 
     }
 
@@ -366,22 +380,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             default:
                 break;
         }
-    }
-
-    private MultipartBody.Part getBody(Context context, Uri uri) {
-
-        File file = prepareFile(context, uri);
-        if (file == null) {
-            return null;
-        }
-
-        RequestBody requestFile =
-                RequestBody.create(
-                        MediaType.parse(IMAGE_TYPE),
-                        file
-                );
-
-        return MultipartBody.Part.createFormData(FILEDATA, file.getName(), requestFile);
     }
 
     private File prepareFile(Context context, Uri uri) {
@@ -578,4 +576,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
 
+    public void onLocationChanged(Location location) {
+        this.location = location;
+    }
 }

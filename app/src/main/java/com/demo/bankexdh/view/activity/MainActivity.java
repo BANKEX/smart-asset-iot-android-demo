@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
@@ -33,6 +35,7 @@ import com.demo.bankexdh.presenter.impl.MainPresenter;
 import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.demo.bankexdh.utils.UIUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +51,8 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 @RuntimePermissions
 public class MainActivity extends BasePresenterActivity<MainPresenter, NotificationView> implements NotificationView {
 
@@ -60,10 +65,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     SwitchCompat switcher;
     @BindView(R.id.uniqueId)
     TextView deviceIdView;
+    @BindView(R.id.camera)
+    View camera;
     @BindView(R.id.animation_view)
     LottieAnimationView animationView;
+
     private static final int TAKE_PHOTO = 2;
-    private String imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         ButterKnife.bind(this);
         switcher.setOnCheckedChangeListener((compoundButton, b) -> {
             presenter.setEnabled(b);
+            camera.setEnabled(b);
             if (b) {
                 presenter.prepare();
             }
@@ -152,6 +160,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onPresenterPrepared(@NonNull MainPresenter presenter) {
         this.presenter = presenter;
         switcher.setChecked(presenter.isEnabled());
+        camera.setEnabled(presenter.isEnabled());
         presenter.prepare();
         sd = new ShakeDetector(presenter);
         setDeviceIdView();
@@ -173,8 +182,10 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.CAMERA})
     void takeAPhoto() {
+        MainActivityPermissionsDispatcher.getLastLocationWithCheck(MainActivity.this);
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             File photoFile = null;
@@ -197,7 +208,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION})
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showNeverAskForCamera() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
@@ -218,7 +229,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     }
 
                     presenter.setOrientation();
-                    imageUri = presenter.getCurrentPhotoPath();
+                    String imageUri = presenter.getCurrentPhotoPath();
                     presenter.uploadFile(Uri.parse(imageUri), this);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -226,6 +237,31 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 }
             }
         }
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    public void getLastLocation() {
+        // Get last known recent location using new Google Play Services SDK (v11+)
+        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    // GPS location can be null if GPS is switched off
+                    if (location != null) {
+                        presenter.onLocationChanged(location);
+                    }
+                })
+                .addOnFailureListener(Throwable::printStackTrace);
     }
 
     @Override
