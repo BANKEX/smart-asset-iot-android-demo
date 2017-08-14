@@ -206,14 +206,15 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     public void uploadFile(Uri filePath, Context context) {
         Timber.d(filePath + "");
         Observable.just(context)
-                .observeOn(Schedulers.io())
                 .map((ctx) -> {
                     InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
                     int imageLength = imageStream.available();
                     String imageUrl = ImageManager.getInstance()
                             .uploadImage(filePath.getLastPathSegment(), imageStream, imageLength);
+
                     return imageUrl;
                 })
+                .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe((s) -> {
                     this.link = s;
