@@ -28,7 +28,6 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
-import com.demo.bankexdh.model.event.LocationEvent;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
@@ -42,12 +41,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.RuntimePermissions;
@@ -183,7 +184,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA})
+    @NeedsPermission({Manifest.permission.CAMERA,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void takeAPhoto() {
         if (isLocationDisabled()) {
             Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
@@ -194,29 +195,27 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             onError();
             return;
         }
+        getLastLocation();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = presenter.createImageFile(this);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-            if (photoFile != null) {
-                try {
-                    Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
-                            + ".provider", presenter.createImageFile(this));
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, TAKE_PHOTO);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            Observable.just(this).map((ctx) -> presenter.createImageFile(this))
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(photoFile -> {
+                        if (photoFile != null) {
+                            try {
+                                Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
+                                        + ".provider", presenter.createImageFile(this));
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                startActivityForResult(takePictureIntent, TAKE_PHOTO);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, t -> onError());
         }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void getLastLocation() {
         // Get last known recent location using new Google Play Services SDK (v11+)
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
@@ -255,7 +254,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                         UIUtils.showInternetConnectionAlertDialog(this);
                         return;
                     }
-
                     presenter.setOrientation();
                     String imageUri = presenter.getCurrentPhotoPath();
                     presenter.uploadFile(Uri.parse(imageUri), this);
@@ -319,11 +317,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateDeviceId(DeviceIdUpdateEvent event) {
         setDeviceIdView();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void executeLocation(LocationEvent event) {
-        MainActivityPermissionsDispatcher.getLastLocationWithCheck(MainActivity.this);
     }
 
     private void setDeviceIdView() {
