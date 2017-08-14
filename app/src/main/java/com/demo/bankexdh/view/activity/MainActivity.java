@@ -15,6 +15,7 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -69,7 +70,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @BindView(R.id.uniqueId)
     TextView deviceIdView;
     @BindView(R.id.camera)
-    View camera;
+    FloatingActionButton camera;
     @BindView(R.id.animation_view)
     LottieAnimationView animationView;
 
@@ -340,7 +341,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     private void enableCameraFab(boolean b) {
-        camera.setVisibility(b ? View.VISIBLE : View.GONE);
+        if (b) {
+            camera.show();
+        } else {
+            camera.hide();
+        }
     }
 
 }
