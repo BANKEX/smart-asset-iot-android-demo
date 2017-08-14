@@ -58,6 +58,8 @@ public class ImageManager {
         String endpoint = container.getServiceClient().getEndpoint().toString();
         return endpoint +
                 SEPARATOR +
+                CONTAINER_NAME +
+                SEPARATOR +
                 imageName;
     }
 

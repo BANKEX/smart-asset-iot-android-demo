@@ -78,16 +78,20 @@
         app:lottie_fileName="done_button.json"
         app:lottie_loop="false" />
 
-    <Button
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/half_margin"
-        android:text="@string/take_a_photo"
+        android:src="@android:drawable/ic_menu_camera"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.902"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_container" />
+        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
+        app:layout_constraintVertical_bias="0.868"
+        android:layout_marginTop="8dp" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

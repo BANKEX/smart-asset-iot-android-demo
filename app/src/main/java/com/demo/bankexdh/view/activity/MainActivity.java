@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -28,6 +28,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.event.LocationEvent;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
@@ -80,7 +81,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         ButterKnife.bind(this);
         switcher.setOnCheckedChangeListener((compoundButton, b) -> {
             presenter.setEnabled(b);
-            camera.setEnabled(b);
+            enableCameraFab(b);
             if (b) {
                 presenter.prepare();
             }
@@ -160,7 +161,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onPresenterPrepared(@NonNull MainPresenter presenter) {
         this.presenter = presenter;
         switcher.setChecked(presenter.isEnabled());
-        camera.setEnabled(presenter.isEnabled());
+        enableCameraFab(presenter.isEnabled());
         presenter.prepare();
         sd = new ShakeDetector(presenter);
         setDeviceIdView();
@@ -184,8 +185,15 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @NeedsPermission({Manifest.permission.CAMERA})
     void takeAPhoto() {
-        MainActivityPermissionsDispatcher.getLastLocationWithCheck(MainActivity.this);
-
+        if (isLocationDisabled()) {
+            Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
+                    Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(getString(android.R.string.ok),
+                    v -> snackbar.dismiss());
+            snackbar.show();
+            onError();
+            return;
+        }
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             File photoFile = null;
@@ -208,8 +216,28 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void showNeverAskForCamera() {
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    public void getLastLocation() {
+        // Get last known recent location using new Google Play Services SDK (v11+)
+        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    // GPS location can be null if GPS is switched off
+                    if (location != null) {
+                        presenter.onLocationChanged(location);
+                    }
+                })
+                .addOnFailureListener(Throwable::printStackTrace);
+    }
+
+
+    @OnNeverAskAgain({Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void showNeverAskAgain() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(R.string.permission_dialog_camera_message)
@@ -239,29 +267,24 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+    private boolean isLocationDisabled() {
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled;
+        boolean network_enabled;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+            return false;
         }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    // GPS location can be null if GPS is switched off
-                    if (location != null) {
-                        presenter.onLocationChanged(location);
-                    }
-                })
-                .addOnFailureListener(Throwable::printStackTrace);
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return !gps_enabled && !network_enabled;
     }
 
     @Override
@@ -298,6 +321,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         setDeviceIdView();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void executeLocation(LocationEvent event) {
+        MainActivityPermissionsDispatcher.getLastLocationWithCheck(MainActivity.this);
+    }
+
     private void setDeviceIdView() {
         String deviceId = presenter.getDeviceId();
         deviceIdView.setVisibility(TextUtils.isEmpty(deviceId) ? View.INVISIBLE : View.VISIBLE);
@@ -305,11 +333,15 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void onPhotoUploadFail(@Nullable String message) {
-        Snackbar snackbar = Snackbar.make(parentView, "Image uploading failed", BaseTransientBottomBar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(parentView, "Image uploading failed", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(getString(android.R.string.ok),
                 v -> snackbar.dismiss());
 
         snackbar.show();
+    }
+
+    private void enableCameraFab(boolean b) {
+        camera.setVisibility(b ? View.VISIBLE : View.GONE);
     }
 
 }

@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.event.LocationEvent;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
@@ -80,6 +81,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private static final int FILE_SIZE_UNITS = 1024;
     private static final int MAX_FILE_SIZE = 9;
     private Location location;
+    private String link;
 
     public MainPresenter() {
         client = RestHelper.getInstance().getApiClient();
@@ -222,6 +224,26 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             }
         }
     }
+    public void uploadFile(Uri filePath, Context context) {
+        Timber.d(filePath + "");
+        Observable.just(context)
+                .observeOn(Schedulers.io())
+                .map((ctx) -> {
+                    InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
+                    int imageLength = imageStream.available();
+                    String imageUrl = ImageManager.getInstance()
+                            .uploadImage(filePath.getLastPathSegment(), imageStream, imageLength);
+                    return imageUrl;
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe((s) -> {
+                    this.link = s;
+                    EventBus.getDefault().post(LocationEvent.newInstance());
+                    Timber.d(s);
+                }, Throwable::printStackTrace);
+
+    }
+
 
     private DeviceNotificationWrapper getShakeNotification(String shakeMessage) {
         DeviceNotificationWrapper wrapper = new DeviceNotificationWrapper();
@@ -270,6 +292,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     if (!isViewNull()) {
                         view.onNotificationSent();
                     }
+                    link = null;
                     isRegistrationInProgress.set(false);
                 } else {
                     if (!isViewNull()) view.onError();
@@ -290,31 +313,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 executed = true;
             }
         });
-    }
-
-    public void uploadFile(Uri filePath, Context context) {
-        Timber.d(filePath + "");
-        Observable.just(context)
-                .observeOn(Schedulers.io())
-                .map((ctx) -> {
-                    InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
-                    int imageLength = imageStream.available();
-                    String imageUrl = ImageManager.getInstance()
-                            .uploadImage(filePath.getLastPathSegment(), imageStream, imageLength);
-
-                    return imageUrl;
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe((s) -> {
-
-                    if (location != null && !TextUtils.isEmpty(s)) {
-
-                        DeviceNotificationWrapper wrapper = getImageNotification(s, location.getLatitude(), location.getLongitude());
-                        insertNotification(wrapper);
-                    }
-                    Timber.d(s);
-                }, Throwable::printStackTrace);
-
     }
 
     public String getCurrentPhotoPath() {
@@ -577,6 +575,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
 
     public void onLocationChanged(Location location) {
-        this.location = location;
+        if (location != null && !TextUtils.isEmpty(link)) {
+            DeviceNotificationWrapper wrapper = getImageNotification(link, location.getLatitude(), location.getLongitude());
+            insertNotification(wrapper);
+        }
     }
 }
