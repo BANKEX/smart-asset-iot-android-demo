@@ -84,7 +84,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         ButterKnife.bind(this);
         switcher.setOnCheckedChangeListener((compoundButton, b) -> {
             presenter.setEnabled(b);
-            enableCameraFab(b);
+//            enableCameraFab(b);
             if (b) {
                 presenter.prepare();
             }
@@ -164,7 +164,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onPresenterPrepared(@NonNull MainPresenter presenter) {
         this.presenter = presenter;
         switcher.setChecked(presenter.isEnabled());
-        enableCameraFab(presenter.isEnabled());
+//        enableCameraFab(presenter.isEnabled());
         presenter.prepare();
         sd = new ShakeDetector(presenter);
         setDeviceIdView();
