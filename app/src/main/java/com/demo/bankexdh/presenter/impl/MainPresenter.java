@@ -219,7 +219,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     this.link = s;
                     sendLocationNotification(location, s);
                     Timber.d(s);
-                }, t -> EventBus.getDefault().post(UploadErrorEvent.newInstance()));
+                }, t -> {
+                    clearLocationNotificationData();
+                    EventBus.getDefault().post(UploadErrorEvent.newInstance());
+                });
 
     }
 
