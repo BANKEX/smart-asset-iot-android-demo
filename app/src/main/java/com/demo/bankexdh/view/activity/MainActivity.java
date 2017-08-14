@@ -186,18 +186,18 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.CAMERA})
     void takeAPhoto() {
-        if (isLocationDisabled()) {
-            Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
-                    Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(getString(android.R.string.ok),
-                    v -> snackbar.dismiss());
-            snackbar.show();
-            onError();
-            return;
-        }
-        getLastLocation();
+//        if (isLocationDisabled()) {
+//            Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
+//                    Snackbar.LENGTH_INDEFINITE);
+//            snackbar.setAction(getString(android.R.string.ok),
+//                    v -> snackbar.dismiss());
+//            snackbar.show();
+//            onError();
+//            return;
+//        }
+//        getLastLocation();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             Observable.just(this).map((ctx) -> presenter.createImageFile(this))
@@ -236,8 +236,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @OnNeverAskAgain({Manifest.permission.CAMERA})
     void showNeverAskAgain() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
