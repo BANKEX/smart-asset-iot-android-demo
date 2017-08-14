@@ -28,6 +28,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.event.UploadErrorEvent;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
@@ -184,7 +185,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
-    @NeedsPermission({Manifest.permission.CAMERA,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void takeAPhoto() {
         if (isLocationDisabled()) {
             Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
@@ -317,6 +318,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateDeviceId(DeviceIdUpdateEvent event) {
         setDeviceIdView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUploadError(UploadErrorEvent event) {
+        onError();
     }
 
     private void setDeviceIdView() {

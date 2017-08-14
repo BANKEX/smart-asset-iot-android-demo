@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.event.UploadErrorEvent;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
@@ -201,6 +202,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             }
         }
     }
+
     public void uploadFile(Uri filePath, Context context) {
         Timber.d(filePath + "");
         Observable.just(context)
@@ -217,7 +219,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     this.link = s;
                     sendLocationNotification(location, s);
                     Timber.d(s);
-                }, Throwable::printStackTrace);
+                }, t -> EventBus.getDefault().post(UploadErrorEvent.newInstance()));
 
     }
 
@@ -265,7 +267,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     if (!isViewNull()) {
                         view.onNotificationSent();
                     }
-                    link = null;
+                    clearLocationNotificationData();
                     isRegistrationInProgress.set(false);
                 } else {
                     if (!isViewNull()) view.onError();
@@ -286,6 +288,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 executed = true;
             }
         });
+    }
+
+    private void clearLocationNotificationData() {
+        link = null;
+        location = null;
     }
 
     @Override
