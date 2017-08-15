@@ -8,15 +8,13 @@ import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
-import com.demo.bankexdh.model.event.UploadErrorEvent;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
 import com.demo.bankexdh.model.rest.RestHelper;
 import com.demo.bankexdh.model.rest.ShakeNotificationData;
 import com.demo.bankexdh.model.rest.api.Register;
-import com.demo.bankexdh.model.store.DeviceModel;
-import com.demo.bankexdh.model.store.UserModel;
+import com.demo.bankexdh.model.store.DataBaseHelper;
 import com.demo.bankexdh.presenter.base.AbstractPresenter;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.utils.Const;
@@ -39,7 +37,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,12 +45,9 @@ import timber.log.Timber;
 import static com.demo.bankexdh.utils.Const.DEVICE_NAME;
 
 public class MainPresenter extends AbstractPresenter<NotificationView> implements ShakeDetector.Listener {
-
-
     private final ApiClient client;
 
     private DeviceNotificationApi deviceNotificationApi;
-    private Call<InsertNotification> notificationCallInsert;
 
     private boolean enabled;
     private boolean executed = true;
@@ -61,14 +55,15 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     private String link;
     private Location location;
+    private DataBaseHelper dbHelper = DataBaseHelper.getInstance();
 
     public MainPresenter() {
         client = RestHelper.getInstance().getApiClient();
-        enabled = isEnabled();
+        enabled = dbHelper.isEnabled();
     }
 
     public void prepare() {
-        if (isDeviceRegistered()) {
+        if (dbHelper.isDeviceRegistered()) {
             setupPresenter();
         } else {
             register();
@@ -77,9 +72,14 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void setupPresenter() {
-        String token = getToken();
+        String token = dbHelper.getToken();
         addAuth(token);
         createServices();
+    }
+
+    private void addAuth(String accessToken) {
+        client.addAuthorization(ApiClient.AUTH_API_KEY,
+                ApiKeyAuth.newInstance(accessToken));
     }
 
     private void register() {
@@ -92,11 +92,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 if (response.isSuccessful()) {
                     Timber.d(response.body().toString());
                     RegisterData data = response.body();
+                    dbHelper.insertUserModel(data);
+                    dbHelper.insertDevice(data);
 
-                    insertUserModel(data);
-                    insertDevice(data);
                     addAuth(data.getToken().getAccessToken());
                     createServices();
+
                     EventBus.getDefault().post(DeviceIdUpdateEvent.newInstance());
                 }
             }
@@ -106,6 +107,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 Timber.d(t.getMessage());
             }
         });
+    }
+
+    private void createServices() {
+        deviceNotificationApi = client.createService(DeviceNotificationApi.class);
     }
 
     private RegisterBody getRegisterBody() {
@@ -119,109 +124,18 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
 
-    private void createServices() {
-        deviceNotificationApi = client.createService(DeviceNotificationApi.class);
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        try (Realm realm = Realm.getDefaultInstance()) {
-            UserModel model = realm.where(UserModel.class).equalTo(UserModel.ID, UserModel.DEFAULT_ID).findFirst();
-            if (model != null) {
-                realm.executeTransaction(t -> {
-                    model.setIsEnabled(enabled);
-                    t.copyToRealmOrUpdate(model);
-                });
-            }
-        }
-    }
-
-    public boolean isEnabled() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            UserModel model = realm.where(UserModel.class).equalTo(UserModel.ID, UserModel.DEFAULT_ID).findFirst();
-            if (model != null) {
-                return model.getIsEnabled();
-            }
-        }
-        return false;
-    }
-
-    private void addAuth(String accessToken) {
-        client.addAuthorization(ApiClient.AUTH_API_KEY,
-                ApiKeyAuth.newInstance(accessToken));
-    }
-
-    private void insertUserModel(RegisterData registerData) {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransaction(t -> {
-                UserModel model = new UserModel();
-                model.setId(UserModel.DEFAULT_ID);
-                model.setAccessToken(registerData.getToken().getAccessToken());
-                model.setRefreshToken(registerData.getToken().getRefreshToken());
-                model.setIsEnabled(enabled);
-                t.copyToRealmOrUpdate(model);
-            });
-        }
-    }
-
-
-    private void insertDevice(RegisterData registerData) {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransaction(t -> {
-                String uiid = registerData.getDeviceId();
-                DeviceModel newModel = new DeviceModel();
-                newModel.setId(DeviceModel.DEFAULT_ID);
-                newModel.setDeviceId(uiid);
-                String firstPart = uiid.substring(0, uiid.indexOf("-"));
-                newModel.setName(String.format(DEVICE_NAME, firstPart));
-                t.copyToRealmOrUpdate(newModel);
-            });
-        }
-    }
-
-    private boolean isDeviceRegistered() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            DeviceModel model = realm.where(DeviceModel.class)
-                    .equalTo(DeviceModel.ID, DeviceModel.DEFAULT_ID).findFirst();
-            return model != null;
-        }
-    }
-
-    private String getToken() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            UserModel model = realm.where(UserModel.class).equalTo(UserModel.ID, UserModel.DEFAULT_ID).findFirst();
-            return model.getAccessToken();
-        }
-    }
-
-    public String getDeviceId() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            DeviceModel model = realm.where(DeviceModel.class)
-                    .equalTo(DeviceModel.ID,
-                            DeviceModel.DEFAULT_ID).findFirst();
-            if (model == null) {
-                return null;
-            } else {
-                return model.getDeviceId();
-            }
-        }
-    }
-
     public void uploadFile(Context context) {
         Observable.just(context)
-                .observeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
                 .map((ctx) -> {
-                    
                     ImageUtils.getInstance().setOrientation();
                     Uri filePath = Uri.parse(ImageUtils.getInstance().getCurrentPhotoPath());
                     InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
                     int imageLength = imageStream.available();
-                    String imageUrl = ImageManager.getInstance()
+                    return ImageManager.getInstance()
                             .uploadImage(filePath.getLastPathSegment(), imageStream, imageLength);
-
-                    return imageUrl;
                 })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((s) -> {
                     this.link = s;
                     sendLocationNotification(location, s);
@@ -229,29 +143,36 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 }, t -> {
                     t.printStackTrace();
                     clearLocationNotificationData();
-                    EventBus.getDefault().post(UploadErrorEvent.newInstance());
+                    if (!isViewNull()) {
+                        view.onError();
+                    }
                 });
 
+    }
+
+    public boolean isEnabled() {
+        return dbHelper.isEnabled();
+    }
+
+    public String getDeviceId() {
+        return dbHelper.getDeviceId();
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        dbHelper.setEnabled(enabled);
     }
 
     public File createImageFile(Context context) throws IOException {
         return ImageUtils.getInstance().createImageFile(context);
     }
 
-    public void setOrientation() throws IOException {
-        ImageUtils.getInstance().setOrientation();
-    }
-
-    public String getCurrentPhotoPath() {
-        return ImageUtils.getInstance().getCurrentPhotoPath();
-    }
-
     @Override
     public void hearShake(String timestamp) {
         if (enabled && executed) {
             executed = false;
-            if (!TextUtils.isEmpty(getDeviceId())) {
-                insertNotification(ShakeNotificationData.getNotification("Shaked"));
+            if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
+                sendNotification(ShakeNotificationData.getNotification("Shaked"));
             }
         }
     }
@@ -264,12 +185,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private void sendLocationNotification(Location location, String imageUrl) {
         if (location != null && !TextUtils.isEmpty(imageUrl)) {
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
-            insertNotification(wrapper);
+            sendNotification(wrapper);
         }
     }
 
-    private void insertNotification(DeviceNotificationWrapper notificationWrapper) {
-        notificationCallInsert = deviceNotificationApi.insert(getDeviceId(), notificationWrapper);
+    private void sendNotification(DeviceNotificationWrapper notificationWrapper) {
+        Call<InsertNotification> notificationCallInsert = deviceNotificationApi.insert(dbHelper.getDeviceId(), notificationWrapper);
         notificationCallInsert.enqueue(new Callback<InsertNotification>() {
             @Override
             public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
@@ -281,7 +202,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     clearLocationNotificationData();
                     isRegistrationInProgress.set(false);
                 } else {
-                    if (!isViewNull()) view.onError();
+                    if (!isViewNull()) {
+                        view.onError();
+                    }
                     if (response.code() == 401) {
                         if (!isRegistrationInProgress.get()) {
                             isRegistrationInProgress.set(true);
@@ -295,7 +218,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             @Override
             public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
                 Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
-                if (!isViewNull()) view.onError();
+                if (!isViewNull()) {
+                    view.onError();
+                }
                 executed = true;
             }
         });
@@ -308,6 +233,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     @Override
     protected void onDestroyed() {
+        clearLocationNotificationData();
     }
 
 

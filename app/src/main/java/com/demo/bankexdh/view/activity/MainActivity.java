@@ -29,7 +29,6 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
-import com.demo.bankexdh.model.event.UploadErrorEvent;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
@@ -49,11 +48,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.RuntimePermissions;
+import timber.log.Timber;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -209,10 +208,10 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             Observable.just(this)
-                    .observeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
                     .map((ctx) -> presenter.createImageFile(this))
-                    .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe(photoFile -> {
+                        Timber.d(Thread.currentThread().getName());
                         if (photoFile != null) {
                             try {
                                 Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
@@ -228,7 +227,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -236,7 +234,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
         locationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
-                    // GPS location can be null if GPS is switched off
                     if (location != null) {
                         presenter.onLocationChanged(location);
                     }
@@ -324,11 +321,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateDeviceId(DeviceIdUpdateEvent event) {
         setDeviceIdView();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUploadError(UploadErrorEvent event) {
-        onError();
     }
 
     private void setDeviceIdView() {
