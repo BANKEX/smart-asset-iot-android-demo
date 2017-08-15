@@ -87,6 +87,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             enableCameraFab(b);
             if (b) {
                 presenter.prepare();
+                sd = new ShakeDetector(presenter);
+                setDeviceIdView();
             }
         });
         prepareAnimation();
@@ -139,14 +141,18 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     protected void onResume() {
         super.onResume();
-        sd.start(mSensorManager);
+        if (sd != null) {
+            sd.start(mSensorManager);
+        }
         setDeviceIdView();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sd.stop();
+        if (sd != null) {
+            sd.stop();
+        }
     }
 
     @Override
@@ -165,9 +171,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         this.presenter = presenter;
         switcher.setChecked(presenter.isEnabled());
         enableCameraFab(presenter.isEnabled());
-        presenter.prepare();
-        sd = new ShakeDetector(presenter);
-        setDeviceIdView();
+        if (switcher.isChecked()) {
+            presenter.prepare();
+            sd = new ShakeDetector(presenter);
+            setDeviceIdView();
+        }
     }
 
     @Override
@@ -250,18 +258,16 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == TAKE_PHOTO) {
-                try {
-                    if (!ClientUtils.isNetworkConnected(this)) {
-                        UIUtils.showInternetConnectionAlertDialog(this);
-                        return;
-                    }
-                    presenter.uploadFile(this);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onPhotoUploadFail("");
+        if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+            try {
+                if (!ClientUtils.isNetworkConnected(this)) {
+                    UIUtils.showInternetConnectionAlertDialog(this);
+                    return;
                 }
+                presenter.uploadFile(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+                onPhotoUploadFail("");
             }
         }
     }

@@ -45,9 +45,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static com.demo.bankexdh.utils.Const.DEVICE_NAME;
+
 public class MainPresenter extends AbstractPresenter<NotificationView> implements ShakeDetector.Listener {
 
-    private static final String ACCELEROMETER = "ACCELEROMETER";
 
     private final ApiClient client;
 
@@ -112,7 +113,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         RegisterBody body = new RegisterBody();
         body.setKey(null);
         body.setId(uiid);
-        body.setName(Const.DEVICE_NAME);
+        String firstPart = uiid.substring(0, uiid.indexOf("-"));
+        body.setName(String.format(DEVICE_NAME, firstPart));
         return body;
     }
 
@@ -166,10 +168,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private void insertDevice(RegisterData registerData) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(t -> {
+                String uiid = registerData.getDeviceId();
                 DeviceModel newModel = new DeviceModel();
                 newModel.setId(DeviceModel.DEFAULT_ID);
-                newModel.setDeviceId(registerData.getDeviceId());
-                newModel.setName(ACCELEROMETER);
+                newModel.setDeviceId(uiid);
+                String firstPart = uiid.substring(0, uiid.indexOf("-"));
+                newModel.setName(String.format(DEVICE_NAME, firstPart));
                 t.copyToRealmOrUpdate(newModel);
             });
         }
@@ -207,6 +211,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         Observable.just(context)
                 .observeOn(Schedulers.io())
                 .map((ctx) -> {
+                    
                     ImageUtils.getInstance().setOrientation();
                     Uri filePath = Uri.parse(ImageUtils.getInstance().getCurrentPhotoPath());
                     InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
@@ -304,4 +309,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     @Override
     protected void onDestroyed() {
     }
+
+
 }
+
+
