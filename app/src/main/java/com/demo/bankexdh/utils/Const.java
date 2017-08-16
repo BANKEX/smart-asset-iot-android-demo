@@ -6,4 +6,5 @@ public class Const {
     public static final String REGISTER_URL="http://13.94.247.153:5000/register";
     public static final String DEVICE_TOKEN="";
     public static final String DEVICE_NAME="IOT_DEVICE (%s)";
+    public static final String KEY="4TzFLFXkMEILDHsbQHVIX1u93TXGpCg5";
 }
