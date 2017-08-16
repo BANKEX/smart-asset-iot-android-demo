@@ -253,12 +253,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA,
+    @OnNeverAskAgain({
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showNeverAskAgain() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
-                .setMessage(R.string.permission_dialog_camera_message)
+                .setMessage(R.string.permission_dialog_message)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                 }).setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> dialog.dismiss()).show();

@@ -2,10 +2,9 @@
     <string name="app_name">DemoApp</string>
     <string name="send_notifications">Enable notifications sending</string>
     <string name="permission_dialog_title">No permissions granted</string>
-    <string name="permission_dialog_message">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
-    <string name="permission_dialog_camera_message">This action needs permissions</string>
+    <string name="permission_dialog_message">This action needs permissions</string>
     <string name="take_a_photo">Take a photo</string>
     <string name="location_disabled_message">Location is disabled</string>
 
