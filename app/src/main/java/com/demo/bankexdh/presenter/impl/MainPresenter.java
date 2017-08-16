@@ -116,7 +116,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private RegisterBody getRegisterBody() {
         String uiid = UUID.randomUUID().toString();
         RegisterBody body = new RegisterBody();
-        body.setKey(null);
         body.setId(uiid);
         String firstPart = uiid.substring(0, uiid.indexOf("-"));
         body.setName(String.format(DEVICE_NAME, firstPart));
@@ -138,7 +137,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((s) -> {
                     this.link = s;
-                    sendLocationNotification(location, s);
+                    sendLocationNotification(location);
                     Timber.d(s);
                 }, t -> {
                     t.printStackTrace();
@@ -179,11 +178,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void onLocationChanged(Location location) {
         this.location = location;
-        sendLocationNotification(location, link);
+        sendLocationNotification(location);
     }
 
-    private void sendLocationNotification(Location location, String imageUrl) {
-        if (location != null && !TextUtils.isEmpty(imageUrl)) {
+    private void sendLocationNotification(Location location) {
+        if (location != null) {
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
             sendNotification(wrapper);
         }

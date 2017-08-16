@@ -12,8 +12,8 @@ public class ImageNotificationData {
 
     private static final String NOTIFICATION_IMAGE_TITLE = "I am here";
 
-    @SerializedName("imageUrl")
-    private String imageUrl;
+//    @SerializedName("imageUrl")
+//    private String imageUrl;
     @SerializedName("latitude")
     private Double latitude;
     @SerializedName("longitude")
@@ -25,7 +25,7 @@ public class ImageNotificationData {
         JsonStringWrapper jsonStringWrapper = new JsonStringWrapper();
 
         ImageNotificationData data = new ImageNotificationData();
-        data.setImageUrl(imageUrl);
+//        data.setImageUrl(imageUrl);
         data.setLatitude(latitude);
         data.setLongitude(longitude);
 

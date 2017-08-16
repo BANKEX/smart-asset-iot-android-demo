@@ -190,13 +190,23 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @OnClick(R.id.camera)
     void takeAPhotoCheck() {
-        MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
+//        MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
+        if (isLocationDisabled()) {
+            Snackbar snackbar = Snackbar.make(parentView, R.string.location_disabled_message,
+                    Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(getString(android.R.string.ok),
+                    v -> snackbar.dismiss());
+            snackbar.show();
+            onError();
+            return;
+        }
+        MainActivityPermissionsDispatcher.getLastLocationWithCheck(this);
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void takeAPhoto() {
         if (isLocationDisabled()) {
-            Snackbar snackbar = Snackbar.make(parentView, "Location is disabled",
+            Snackbar snackbar = Snackbar.make(parentView, R.string.location_disabled_message,
                     Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction(getString(android.R.string.ok),
                     v -> snackbar.dismiss());
@@ -226,6 +236,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void getLastLocation() {
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -261,7 +272,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     UIUtils.showInternetConnectionAlertDialog(this);
                     return;
                 }
-                presenter.uploadFile(this);
+//                presenter.uploadFile(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 onPhotoUploadFail("");
