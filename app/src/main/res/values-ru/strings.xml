@@ -4,7 +4,7 @@
     <string name="permission_dialog_title">Разрешения не предоставлены</string>
     <string name="dialog_title">Отсутствует подключение к интернет</string>
     <string name="dialog_message">Попробуйте:\n\t\u2022 Выключить авиа режим\n\t\u2022 Включить передачу мобильных данных или Wi-Fi\n\t\u2022 Проверить сигнал мобильной сети</string>
-    <string name="permission_dialog_message">Это действие требует разрешение для доступа к геоданным</string>
+    <string name="permission_dialog_message">Это действие требует разрешение для доступа к камере и к геоданным</string>
     <string name="take_a_photo">Сфотографировать</string>
     <string name="location_disabled_message">Передача геоданных отключена</string>
 
