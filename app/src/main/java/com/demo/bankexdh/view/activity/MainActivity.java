@@ -190,17 +190,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @OnClick(R.id.camera)
     void takeAPhotoCheck() {
-//        MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
-        if (isLocationDisabled()) {
-            Snackbar snackbar = Snackbar.make(parentView, R.string.location_disabled_message,
-                    Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(getString(android.R.string.ok),
-                    v -> snackbar.dismiss());
-            snackbar.show();
-            onError();
-            return;
-        }
-        MainActivityPermissionsDispatcher.getLastLocationWithCheck(this);
+        MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
@@ -236,7 +226,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     public void getLastLocation() {
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -253,8 +242,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
 
-    @OnNeverAskAgain({
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showNeverAskAgain() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
@@ -272,7 +260,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     UIUtils.showInternetConnectionAlertDialog(this);
                     return;
                 }
-//                presenter.uploadFile(this);
+                presenter.uploadFile(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 onPhotoUploadFail("");

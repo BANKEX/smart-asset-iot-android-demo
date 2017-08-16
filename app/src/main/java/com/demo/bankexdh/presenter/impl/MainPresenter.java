@@ -135,10 +135,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             .uploadImage(filePath.getLastPathSegment(), imageStream, imageLength);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((s) -> {
-                    this.link = s;
-                    sendLocationNotification(location);
-                    Timber.d(s);
+                .subscribe((link) -> {
+                    this.link = link;
+                    sendLocationNotification(location, link);
+                    Timber.d(link);
                 }, t -> {
                     t.printStackTrace();
                     clearLocationNotificationData();
@@ -178,12 +178,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void onLocationChanged(Location location) {
         this.location = location;
-        sendLocationNotification(location);
+        sendLocationNotification(location, link);
     }
 
-    private void sendLocationNotification(Location location) {
-        if (location != null) {
-            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
+    private void sendLocationNotification(Location location, String imageUrl) {
+        if (location != null && !TextUtils.isEmpty(imageUrl)) {
+            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(imageUrl, location.getLatitude(), location.getLongitude());
             sendNotification(wrapper);
         }
     }
