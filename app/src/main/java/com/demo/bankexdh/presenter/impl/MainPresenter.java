@@ -189,6 +189,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void sendNotification(DeviceNotificationWrapper notificationWrapper) {
+        if (deviceNotificationApi == null) {
+            return;
+        }
         Call<InsertNotification> notificationCallInsert = deviceNotificationApi.insert(dbHelper.getDeviceId(), notificationWrapper);
         notificationCallInsert.enqueue(new Callback<InsertNotification>() {
             @Override
