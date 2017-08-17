@@ -87,6 +87,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             if (b) {
                 presenter.prepare();
                 sd = new ShakeDetector(presenter);
+                sd.start(mSensorManager);
                 setDeviceIdView();
             }
         });
