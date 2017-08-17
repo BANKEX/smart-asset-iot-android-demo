@@ -97,7 +97,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         animationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-
                 animationView.setVisibility(View.VISIBLE);
             }
 
@@ -178,13 +177,24 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     @Override
-    public void onNotificationSent() {
-        if (animationView.isAnimating()) {
-            animationView.cancelAnimation();
-        }
-        animationView.setAnimation("done_button.json");
-        animationView.playAnimation();
-        vibrate(500);
+    public void onShakeNotificationSent() {
+        animationView.cancelAnimation();
+        animationView.setAnimation("done_button.json", LottieAnimationView.CacheStrategy.Strong);
+        playAnimation();
+    }
+
+    @Override
+    public void onLocationNotificationSent() {
+        animationView.cancelAnimation();
+        animationView.setAnimation("location_pin.json", LottieAnimationView.CacheStrategy.Strong);
+        playAnimation();
+    }
+
+    @Override
+    public void onError() {
+        animationView.cancelAnimation();
+        animationView.setAnimation("x_pop.json", LottieAnimationView.CacheStrategy.Strong);
+        playAnimation();
     }
 
 
@@ -201,6 +211,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             return;
         }
         MainActivityPermissionsDispatcher.getLastLocationWithCheck(this);
+    }
+
+    private void playAnimation() {
+        animationView.playAnimation();
+        vibrate(500);
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
@@ -304,16 +319,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-    @Override
-    public void onError() {
-        if (animationView.isAnimating()) {
-            animationView.cancelAnimation();
-        }
-        animationView.setAnimation("x_pop.json");
-        animationView.playAnimation();
-        vibrate(500);
     }
 
     private void vibrate(long millis) {
