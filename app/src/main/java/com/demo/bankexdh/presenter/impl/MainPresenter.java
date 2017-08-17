@@ -171,7 +171,42 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
-                sendNotification(ShakeNotificationData.getNotification("Shaked"));
+                sendNotification(ShakeNotificationData.getNotification("Shaked"), new Callback<InsertNotification>() {
+                    @Override
+                    public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
+                        Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
+                        if (response.isSuccessful()) {
+                            if (!isViewNull()) {
+                                view.onShakeNotificationSent();
+                            }
+                            isRegistrationInProgress.set(false);
+                        } else {
+                            register(response.code());
+                        }
+                        executed = true;
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
+                        Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
+                        if (!isViewNull()) {
+                            view.onError();
+                        }
+                        executed = true;
+                    }
+                });
+            }
+        }
+    }
+
+    private void register(int code) {
+        if (!isViewNull()) {
+            view.onError();
+        }
+        if (code == 401) {
+            if (!isRegistrationInProgress.get()) {
+                isRegistrationInProgress.set(true);
+                register();
             }
         }
     }
@@ -181,48 +216,43 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         sendLocationNotification(location, link);
     }
 
-    private void sendLocationNotification(Location location, String imageUrl) {
-        if (location != null && !TextUtils.isEmpty(imageUrl)) {
-            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(imageUrl, location.getLatitude(), location.getLongitude());
-            sendNotification(wrapper);
-        }
-    }
-
-    private void sendNotification(DeviceNotificationWrapper notificationWrapper) {
-        Call<InsertNotification> notificationCallInsert = deviceNotificationApi.insert(dbHelper.getDeviceId(), notificationWrapper);
-        notificationCallInsert.enqueue(new Callback<InsertNotification>() {
-            @Override
-            public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
-                Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
-                if (response.isSuccessful()) {
-                    if (!isViewNull()) {
-                        view.onNotificationSent();
+    private void sendLocationNotification(Location location, String link) {
+        if (location != null) {
+            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
+            sendNotification(wrapper, new Callback<InsertNotification>() {
+                @Override
+                public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
+                    Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
+                    if (response.isSuccessful()) {
+                        if (!isViewNull()) {
+                            view.onLocationNotificationSent();
+                        }
+                        clearLocationNotificationData();
+                        isRegistrationInProgress.set(false);
+                    } else {
+                        register(response.code());
                     }
-                    clearLocationNotificationData();
-                    isRegistrationInProgress.set(false);
-                } else {
+                    executed = true;
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
+                    Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
                     if (!isViewNull()) {
                         view.onError();
                     }
-                    if (response.code() == 401) {
-                        if (!isRegistrationInProgress.get()) {
-                            isRegistrationInProgress.set(true);
-                            register();
-                        }
-                    }
+                    executed = true;
                 }
-                executed = true;
-            }
+            });
+        }
+    }
 
-            @Override
-            public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
-                Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
-                if (!isViewNull()) {
-                    view.onError();
-                }
-                executed = true;
-            }
-        });
+    private void sendNotification(DeviceNotificationWrapper notificationWrapper, Callback<InsertNotification> callback) {
+        if (deviceNotificationApi == null) {
+            return;
+        }
+        Call<InsertNotification> notificationCallInsert = deviceNotificationApi.insert(dbHelper.getDeviceId(), notificationWrapper);
+        notificationCallInsert.enqueue(callback);
     }
 
     private void clearLocationNotificationData() {
