@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DemoApp</string>
+    <string name="app_name">BankEx IoT</string>
     <string name="send_notifications">Enable notifications sending</string>
     <string name="permission_dialog_title">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
