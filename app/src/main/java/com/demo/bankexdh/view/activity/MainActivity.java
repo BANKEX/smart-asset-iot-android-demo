@@ -68,8 +68,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     TextView deviceIdView;
     @BindView(R.id.camera)
     FloatingActionButton camera;
-    @BindView(R.id.animation_view)
-    LottieAnimationView animationView;
+    @BindView(R.id.animationAccelerometer)
+    LottieAnimationView animationAccelerometer;
+    @BindView(R.id.animationError)
+    LottieAnimationView animationError;
+    @BindView(R.id.animationLocation)
+    LottieAnimationView animationLocation;
 
     private static final int TAKE_PHOTO = 2;
 
@@ -93,28 +97,77 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     void prepareAnimation() {
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
+        animationError.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                animationView.setVisibility(View.VISIBLE);
+                animationLocation.setVisibility(View.GONE);
+                animationError.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                animationView.setVisibility(View.GONE);
+                animationError.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationCancel(Animator animator) {
-                animationView.setVisibility(View.GONE);
+                animationError.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-                animationView.setVisibility(View.GONE);
+                animationError.setVisibility(View.GONE);
             }
         });
-        animationView.setVisibility(View.GONE);
+        animationLocation.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationError.setVisibility(View.GONE);
+                animationAccelerometer.setVisibility(View.GONE);
+                animationLocation.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+        });
+        animationAccelerometer.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationError.setVisibility(View.GONE);
+                animationAccelerometer.setVisibility(View.GONE);
+                animationAccelerometer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationAccelerometer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationAccelerometer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationAccelerometer.setVisibility(View.GONE);
+            }
+        });
+        animationError.setVisibility(View.GONE);
+        animationAccelerometer.setVisibility(View.GONE);
+        animationLocation.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.switcher)
@@ -177,34 +230,30 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-        animationView.cancelAnimation();
-        animationView.setAnimation("done_button.json", LottieAnimationView.CacheStrategy.Strong);
-        playAnimation();
+        animationAccelerometer.cancelAnimation();
+        playAnimation(animationAccelerometer);
     }
 
     @Override
     public void onLocationNotificationSent() {
-        animationView.cancelAnimation();
-        animationView.setAnimation("location_pin.json", LottieAnimationView.CacheStrategy.Strong);
-        playAnimation();
+        animationLocation.cancelAnimation();
+        playAnimation(animationLocation);
     }
 
     @Override
     public void onError() {
-        animationView.cancelAnimation();
-        animationView.setAnimation("x_pop.json", LottieAnimationView.CacheStrategy.Strong);
-        playAnimation();
+        animationError.cancelAnimation();
+        playAnimation(animationError);
     }
 
+    private void playAnimation(LottieAnimationView animationView) {
+        animationView.playAnimation();
+        vibrate(500);
+    }
 
     @OnClick(R.id.camera)
     void takeAPhotoCheck() {
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
-    }
-
-    private void playAnimation() {
-        animationView.playAnimation();
-        vibrate(500);
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})

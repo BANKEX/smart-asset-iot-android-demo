@@ -217,7 +217,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void sendLocationNotification(Location location, String link) {
-        if (location != null && !TextUtils.isEmpty(link)) {
+        if (location != null ) {
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
             sendNotification(wrapper, new Callback<InsertNotification>() {
                 @Override
