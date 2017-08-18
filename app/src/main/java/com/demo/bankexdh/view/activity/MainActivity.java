@@ -42,8 +42,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -229,14 +227,10 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     .subscribe(photoFile -> {
                         Timber.d(Thread.currentThread().getName());
                         if (photoFile != null) {
-                            try {
-                                Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
-                                        + ".provider", presenter.createImageFile(this));
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                startActivityForResult(takePictureIntent, TAKE_PHOTO);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
+                                    + ".provider", presenter.createImageFile(this));
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, TAKE_PHOTO);
                         }
                     }, t -> onError());
         }
