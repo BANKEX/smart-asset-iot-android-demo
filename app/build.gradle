@@ -9,8 +9,8 @@ android {
         applicationId "com.demo.bankexdh"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.0.4"
+        versionCode 9
+        versionName "1.0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -88,6 +88,9 @@ dependencies {
     compile "io.reactivex.rxjava2:rxandroid:${rxandroid}"
     compile "io.reactivex.rxjava2:rxjava:${rxjava}"
     compile "com.squareup.retrofit2:adapter-rxjava2:${adapter_rxjava2}"
+
+    //FAB Progress
+    compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'

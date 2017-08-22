@@ -3,5 +3,6 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#607D8B</color>
+    <color name="colorProgress">#03A9F4</color>
     <color name="primaryText">#212121</color>
 </resources>

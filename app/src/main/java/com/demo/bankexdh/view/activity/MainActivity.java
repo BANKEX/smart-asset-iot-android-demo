@@ -36,6 +36,7 @@ import com.demo.bankexdh.presenter.impl.MainPresenter;
 import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.demo.bankexdh.utils.UIUtils;
+import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -68,6 +69,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     TextView deviceIdView;
     @BindView(R.id.camera)
     FloatingActionButton camera;
+    @BindView(R.id.fabProgressCircle)
+    FABProgressCircle fabProgressCircle;
     @BindView(R.id.animationAccelerometer)
     LottieAnimationView animationAccelerometer;
     @BindView(R.id.animationError)
@@ -236,12 +239,15 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onLocationNotificationSent() {
+        fabProgressCircle.hide();
         animationLocation.cancelAnimation();
         playAnimation(animationLocation);
+
     }
 
     @Override
     public void onError() {
+        fabProgressCircle.hide();
         animationError.cancelAnimation();
         playAnimation(animationError);
     }
@@ -319,6 +325,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     UIUtils.showInternetConnectionAlertDialog(this);
                     return;
                 }
+                fabProgressCircle.show();
                 presenter.uploadFile(this);
             } catch (Exception e) {
                 e.printStackTrace();
