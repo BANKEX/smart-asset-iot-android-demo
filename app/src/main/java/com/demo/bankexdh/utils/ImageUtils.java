@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -45,7 +47,7 @@ public class ImageUtils {
         return currentPhotoPath;
     }
 
-    public File createImageFile(Context context) throws IOException {
+    public File createImageFile(Context context) throws IOException, NoSuchAlgorithmException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -54,9 +56,11 @@ public class ImageUtils {
             boolean success = storageDir.mkdir();
             Timber.d("Success " + success);
         }
+        String fileName = getName(imageFileName);
+
         Timber.d(storageDir.getAbsolutePath());
-        File image = File.createTempFile(imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+        File image = File.createTempFile(fileName,  /* prefix */
+                "",         /* suffix */
                 storageDir      /* directory */);
 
         // Save a file: path for use with ACTION_VIEW intents
@@ -65,12 +69,27 @@ public class ImageUtils {
         return image;
     }
 
-    public void setOrientation(Context context, Uri uri) throws IOException {
+    public void setOrientation(Context context, Uri uri) throws IOException, NoSuchAlgorithmException {
         File file = prepareFile(context, uri);
         if (file != null) {
             absolutImagePath = file.getAbsolutePath();
             setOrientation();
         }
+    }
+
+    private String getName(String input) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(input.getBytes());
+
+        byte byteData[] = md.digest();
+
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return sb.toString();
     }
 
     //Due to Samsung mobile specific issue with Photo Rotation we need to get Exif data, check orientation
@@ -106,7 +125,7 @@ public class ImageUtils {
         }
     }
 
-    private File prepareFile(Context context, Uri uri) {
+    private File prepareFile(Context context, Uri uri) throws NoSuchAlgorithmException {
         File file = FileUtils.getFile(context, uri);
         File compressedFile;
         try {
@@ -160,7 +179,7 @@ public class ImageUtils {
                 matrix, true);
     }
 
-    private String compressImage(Context context, @NonNull String filePath) throws IOException {
+    private String compressImage(Context context, @NonNull String filePath) throws IOException, NoSuchAlgorithmException {
         Bitmap scaledBitmap = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();

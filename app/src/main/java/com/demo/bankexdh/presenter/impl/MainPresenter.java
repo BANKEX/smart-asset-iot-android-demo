@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -162,7 +163,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         dbHelper.setEnabled(enabled);
     }
 
-    public File createImageFile(Context context) throws IOException {
+    public File createImageFile(Context context) throws IOException, NoSuchAlgorithmException {
         return ImageUtils.getInstance().createImageFile(context);
     }
 
