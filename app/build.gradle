@@ -9,8 +9,8 @@ android {
         applicationId "com.demo.bankexdh"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 10
-        versionName "1.0.6"
+        versionCode 11
+        versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

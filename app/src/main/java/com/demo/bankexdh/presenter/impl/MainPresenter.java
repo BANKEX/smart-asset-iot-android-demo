@@ -129,6 +129,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 .observeOn(Schedulers.newThread())
                 .map((ctx) -> {
                     ImageUtils.getInstance().setOrientation();
+                    boolean renamed = ImageUtils.getInstance().renameFile(ctx);
+                    if (!renamed) {
+                        throw new RuntimeException("File not renamed");
+                    }
                     Uri filePath = Uri.parse(ImageUtils.getInstance().getCurrentPhotoPath());
                     InputStream imageStream = ctx.getContentResolver().openInputStream(filePath);
                     int imageLength = imageStream.available();

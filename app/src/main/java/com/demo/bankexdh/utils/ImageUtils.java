@@ -15,6 +15,7 @@ import android.util.Log;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class ImageUtils {
         return currentPhotoPath;
     }
 
-    public File createImageFile(Context context) throws IOException, NoSuchAlgorithmException {
+    public File createImageFile(Context context) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -56,17 +57,27 @@ public class ImageUtils {
             boolean success = storageDir.mkdir();
             Timber.d("Success " + success);
         }
-        String fileName = getName(imageFileName);
-
-        Timber.d(storageDir.getAbsolutePath());
-        File image = File.createTempFile(fileName,  /* prefix */
-                "",         /* suffix */
-                storageDir      /* directory */);
-
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         // Save a file: path for use with ACTION_VIEW intents
         absolutImagePath = image.getAbsolutePath();
         currentPhotoPath = "file:" + absolutImagePath;
         return image;
+    }
+
+    public boolean renameFile(Context context) throws IOException, NoSuchAlgorithmException {
+        File file = new File(absolutImagePath);
+        String newName = getName(absolutImagePath);
+
+        File storageDir = new File(context.getExternalCacheDir() + "/photos");
+        if (!storageDir.exists()) {
+            boolean success = storageDir.mkdir();
+            Timber.d("Success " + success);
+        }
+        File newFile = new File(storageDir.getAbsolutePath() + "/" + newName);
+        boolean isRenamed = file.renameTo(newFile);
+        absolutImagePath = newFile.getAbsolutePath();
+        currentPhotoPath = "file:" + absolutImagePath;
+        return isRenamed;
     }
 
     public void setOrientation(Context context, Uri uri) throws IOException, NoSuchAlgorithmException {
@@ -77,16 +88,23 @@ public class ImageUtils {
         }
     }
 
-    private String getName(String input) throws NoSuchAlgorithmException {
+    private String getName(String path) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(input.getBytes());
+        FileInputStream fis = new FileInputStream(path);
 
-        byte byteData[] = md.digest();
+        byte[] dataBytes = new byte[1024];
+
+        int nread = 0;
+        while ((nread = fis.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, nread);
+        }
+        ;
+        byte[] mdbytes = md.digest();
 
         //convert the byte to hex format method 1
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
         }
 
         return sb.toString();
