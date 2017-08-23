@@ -381,7 +381,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private void setDeviceIdView() {
         String deviceId = presenter.getDeviceId();
         deviceIdView.setVisibility(TextUtils.isEmpty(deviceId) ? View.INVISIBLE : View.VISIBLE);
-        deviceIdView.setText(String.format("ID: %s", deviceId));
+        deviceIdView.setText(String.format(getString(R.string.deviceId), deviceId));
     }
 
     public void onPhotoUploadFail(@Nullable String message) {
