@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BankEx IoT</string>
+    <string name="app_name">BankEx Blockchain Sensor</string>
     <string name="send_notifications">Activate sensors</string>
     <string name="permission_dialog_title">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
@@ -7,5 +7,5 @@
     <string name="permission_dialog_message">This action needs permissions</string>
     <string name="take_a_photo">Take a photo</string>
     <string name="location_disabled_message">Location is disabled</string>
-    <string name="deviceId">Device\'s ID:\n%s</string>
+    <string name="deviceId">Device\'s ID: %s</string>
 </resources>

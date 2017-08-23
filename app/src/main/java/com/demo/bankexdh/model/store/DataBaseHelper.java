@@ -57,12 +57,11 @@ public class DataBaseHelper {
     public void insertDevice(RegisterData registerData) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.executeTransaction(t -> {
-                String uiid = registerData.getDeviceId();
+                String id = registerData.getDeviceId();
                 DeviceModel newModel = new DeviceModel();
                 newModel.setId(DeviceModel.DEFAULT_ID);
-                newModel.setDeviceId(uiid);
-                String firstPart = uiid.substring(0, uiid.indexOf("-"));
-                newModel.setName(String.format(DEVICE_NAME, firstPart));
+                newModel.setDeviceId(id);
+                newModel.setName(String.format(DEVICE_NAME, id));
                 t.copyToRealmOrUpdate(newModel);
             });
         }

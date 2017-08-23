@@ -32,7 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Observable;
@@ -115,11 +116,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private RegisterBody getRegisterBody() {
-        String uiid = UUID.randomUUID().toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("mmssSSS", Locale.getDefault());
+        String id = sdf.format(System.currentTimeMillis());
         RegisterBody body = new RegisterBody();
-        body.setId(uiid);
-        String firstPart = uiid.substring(0, uiid.indexOf("-"));
-        body.setName(String.format(DEVICE_NAME, firstPart));
+        body.setId(id);
+        body.setName(String.format(DEVICE_NAME, id));
         return body;
     }
 
