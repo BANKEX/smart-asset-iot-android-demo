@@ -5,7 +5,8 @@
     android:id="@+id/parentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.demo.bankexdh.view.activity.MainActivity">
+    tools:context="com.demo.bankexdh.view.activity.MainActivity"
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/uniqueId"
@@ -107,31 +108,48 @@
         app:lottie_fileName="x_pop.json"
         app:lottie_loop="false" />
 
-    <com.github.jorgecastilloprz.FABProgressCircle
-        android:id="@+id/fabProgressCircle"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:arcColor="@color/colorProgress"
-        app:arcWidth="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.902"
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/LabelTextAppearance"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginRight="@dimen/half_margin"
+        android:layout_marginBottom="@dimen/half_margin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
-        app:layout_constraintVertical_bias="0.868"
-        app:roundedStroke="true">
+        app:layout_constraintBottom_toTopOf="@+id/shake_button"
+        android:text="@string/send_hint_label"
+        android:id="@+id/send_hint"
+        android:layout_marginStart="@dimen/half_margin"
+        android:layout_marginEnd="@dimen/half_margin" />
 
+    <Button
+        android:id="@+id/shake_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginRight="@dimen/half_margin"
+        android:layout_marginBottom="@dimen/half_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/photo_button"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:text="@string/button_shake_label"
+        android:layout_marginStart="@dimen/half_margin"
+        android:layout_marginEnd="@dimen/half_margin" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:elevation="2dp"
-            android:src="@android:drawable/ic_menu_camera"
-            app:fabSize="normal" />
-
-
-    </com.github.jorgecastilloprz.FABProgressCircle>
+    <Button
+        android:id="@+id/photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/half_margin"
+        android:layout_marginBottom="@dimen/half_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/shake_button"
+        android:text="@string/button_photo_label"
+        android:layout_marginEnd="@dimen/half_margin" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -142,5 +160,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uniqueId" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progress_bar_view"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_useIntrinsicPadding="false"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

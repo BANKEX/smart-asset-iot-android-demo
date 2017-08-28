@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
@@ -186,8 +187,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         return ImageUtils.getInstance().createImageFile(context);
     }
 
+    public void onShake() {
+        hearShake(null);
+    }
+
     @Override
-    public void hearShake(String timestamp) {
+    public void hearShake(@Nullable String timestamp) {
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {

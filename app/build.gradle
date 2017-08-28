@@ -99,5 +99,7 @@ dependencies {
 
     compile 'com.github.apl-devs:appintro:v4.2.2'
 
+    compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
+
     testCompile 'junit:junit:4.12'
 }
