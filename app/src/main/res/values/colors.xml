@@ -5,4 +5,5 @@
     <color name="colorAccent">#607D8B</color>
     <color name="colorProgress">#03A9F4</color>
     <color name="primaryText">#212121</color>
+    <color name="introSlideBackground">#84AABC</color>
 </resources>

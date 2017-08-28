@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
@@ -59,9 +60,22 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private Location location;
     private DataBaseHelper dbHelper = DataBaseHelper.getInstance();
 
-    public MainPresenter() {
+    private PreferencesRepository preferencesRepository;
+
+    public MainPresenter(PreferencesRepository preferencesRepository) {
         client = RestHelper.getInstance().getApiClient();
         enabled = dbHelper.isEnabled();
+        this.preferencesRepository = preferencesRepository;
+    }
+
+    @Override
+    public void onViewAttached(NotificationView view) {
+        super.onViewAttached(view);
+
+        if (preferencesRepository.isFirstRun()) {
+            view.showIntro();
+            preferencesRepository.setFirstRun(false);
+        }
     }
 
     public void prepare() {

@@ -12,4 +12,7 @@
     <string name="action_about_label">About</string>
     <string name="activity_about_label">About</string>
     <string name="about_info">To use the application create a blockchain-based Smart Asset following the steps here [link to instructions]\n\nOn the stage of Smart Asset validation:\n\n1) Launch application;\n\n2) Scan the QR code of the Asset that needs to be validated;\n\n3) On the main page of the application, press the “Shake” button or simply shake your phone to generate a motion sensor signal;\n\n4) On the main page of the application press the “Photo” button to generate a geolocation sensor signal and photo-verification;\n\n5) Check for validation confirmation on the Smart Asset page.</string>
+
+    <string name="intro_slide_title">Slide title</string>
+    <string name="intro_slide_description">Slide description</string>
 </resources>

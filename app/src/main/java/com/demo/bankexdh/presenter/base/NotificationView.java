@@ -6,4 +6,6 @@ public interface NotificationView extends MvpView {
     void onLocationNotificationSent();
 
     void onError();
+
+    void showIntro();
 }

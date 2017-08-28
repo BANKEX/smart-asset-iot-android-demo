@@ -31,10 +31,12 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
 import com.demo.bankexdh.presenter.impl.MainPresenter;
+import com.demo.bankexdh.presenter.impl.MainPresenterFactory;
 import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.demo.bankexdh.utils.UIUtils;
@@ -234,7 +236,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @NonNull
     @Override
     protected PresenterFactory<MainPresenter> getPresenterFactory() {
-        return MainPresenter::new;
+        return new MainPresenterFactory(new PreferencesRepository(this));
     }
 
     @Override
@@ -268,6 +270,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         fabProgressCircle.hide();
         animationError.cancelAnimation();
         playAnimation(animationError);
+    }
+
+    @Override
+    public void showIntro() {
+        IntroActivity.start(this);
     }
 
     private void playAnimation(LottieAnimationView animationView) {

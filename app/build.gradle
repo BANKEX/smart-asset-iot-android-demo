@@ -97,7 +97,7 @@ dependencies {
     // https://mvnrepository.com/artifact/joda-time/joda-time
     compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
 
-
+    compile 'com.github.apl-devs:appintro:v4.2.2'
 
     testCompile 'junit:junit:4.12'
 }
