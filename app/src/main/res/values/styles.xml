@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="LabelTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
 </resources>

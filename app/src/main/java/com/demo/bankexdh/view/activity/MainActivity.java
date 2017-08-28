@@ -22,6 +22,8 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -97,6 +99,22 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             }
         });
         prepareAnimation();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                AboutActivity.start(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void prepareAnimation() {
