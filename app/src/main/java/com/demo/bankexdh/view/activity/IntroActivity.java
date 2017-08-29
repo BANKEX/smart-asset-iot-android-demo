@@ -7,45 +7,35 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.demo.bankexdh.R;
-import com.github.paolorotolo.appintro.AppIntro2;
-import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.github.paolorotolo.appintro.model.SliderPage;
+import com.demo.bankexdh.view.fragment.IntroSlideFragment;
+import com.github.paolorotolo.appintro.AppIntro;
 
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class IntroActivity extends AppIntro2 {
+public class IntroActivity extends AppIntro {
 
-    @BindColor(R.color.introSlideBackground) int bgColor;
-    @BindString(R.string.intro_slide_description) String description;
-    @BindString(R.string.intro_slide_title) String title;
-    int imageRes = R.drawable.slide;
+    @BindString(R.string.intro_first_slide_title)
+    String firstTitle;
+    @BindString(R.string.intro_second_slide_title)
+    String secondTitle;
+    @BindString(R.string.intro_second_slide_description)
+    String secondDescription;
+
 
     public static void start(Context context) {
         Intent intent = new Intent(context, IntroActivity.class);
         context.startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        SliderPage firstPage = new SliderPage();
-        firstPage.setBgColor(bgColor);
-        firstPage.setDescription(description);
-        firstPage.setTitle(title);
-        firstPage.setImageDrawable(imageRes);
-
-        SliderPage secondPage = new SliderPage();
-        secondPage.setBgColor(bgColor);
-        secondPage.setDescription(description);
-        secondPage.setTitle(title);
-        secondPage.setImageDrawable(imageRes);
-
-        addSlide(AppIntroFragment.newInstance(firstPage));
-        addSlide(AppIntroFragment.newInstance(secondPage));
+        addSlide(IntroSlideFragment.newInstance(firstTitle));
+        addSlide(IntroSlideFragment.newInstance(secondTitle, secondDescription));
 
         setFadeAnimation();
     }
@@ -53,12 +43,14 @@ public class IntroActivity extends AppIntro2 {
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
+
         finish();
     }
 
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
+
         finish();
     }
 }
