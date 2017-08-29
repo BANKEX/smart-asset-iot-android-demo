@@ -17,6 +17,8 @@ public class IntroActivity extends AppIntro {
 
     @BindString(R.string.intro_first_slide_title)
     String firstTitle;
+    @BindString(R.string.intro_first_slide_description)
+    String firstDescription;
     @BindString(R.string.intro_second_slide_title)
     String secondTitle;
     @BindString(R.string.intro_second_slide_description)
@@ -31,12 +33,14 @@ public class IntroActivity extends AppIntro {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        addSlide(IntroSlideFragment.newInstance(firstTitle));
+        addSlide(IntroSlideFragment.newInstance(firstTitle, firstDescription));
         addSlide(IntroSlideFragment.newInstance(secondTitle, secondDescription));
-
+        setSkipText(getString(R.string.skip));
+        setDoneText(getString(R.string.done));
         setFadeAnimation();
     }
 
