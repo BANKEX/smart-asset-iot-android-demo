@@ -38,15 +38,17 @@ public abstract class BasePresenterFragment<P extends AbstractPresenter<V>, V ex
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+
         presenter.onViewAttached(getPresenterView());
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
         presenter.onViewDetached();
+
+        super.onStop();
     }
 
     /**

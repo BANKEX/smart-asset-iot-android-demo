@@ -8,13 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="LabelTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">@dimen/text_size</item>
     </style>
 
-    <style name="NoActionBar" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="OvalButton">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:minWidth">128dp</item>
+        <item name="android:background">@drawable/oval_button_with_text</item>
     </style>
+
 </resources>

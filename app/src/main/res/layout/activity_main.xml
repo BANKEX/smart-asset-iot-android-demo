@@ -139,27 +139,23 @@
 
         <Button
             android:id="@+id/shake_button"
+            style="@style/OvalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/half_margin"
             android:layout_weight="1"
-            android:background="@drawable/oval_button_with_text"
-            android:text="@string/button_shake_label"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark" />
+            android:text="@string/button_shake_label" />
 
         <Button
             android:id="@+id/photo_button"
+            style="@style/OvalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/half_margin"
             android:layout_weight="1"
-            android:background="@drawable/oval_button_with_text"
-            android:text="@string/button_photo_label"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark" />
+            android:text="@string/button_photo_label" />
     </LinearLayout>
 
     <FrameLayout

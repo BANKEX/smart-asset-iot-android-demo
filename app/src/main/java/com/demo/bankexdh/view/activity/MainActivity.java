@@ -367,7 +367,10 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 e.printStackTrace();
                 onPhotoUploadFail("");
             }
+            return;
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean isLocationDisabled() {
