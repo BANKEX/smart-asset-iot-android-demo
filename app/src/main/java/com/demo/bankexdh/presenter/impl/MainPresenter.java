@@ -240,11 +240,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void onLocationChanged(Location location) {
         this.location = location;
-        sendLocationNotification(location, link);
     }
 
     private void sendLocationNotification(Location location, String link) {
         if (location != null && !TextUtils.isEmpty(link)) {
+
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, "1234",
                     location.getLatitude(), location.getLongitude());
             sendNotification(wrapper, new Callback<InsertNotification>() {
