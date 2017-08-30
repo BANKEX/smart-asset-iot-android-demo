@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/introSlideBackground"
     android:padding="16dp"
-    tools:background="@color/colorPrimaryDark">
+    android:background="@color/introSlideBackground">
 
-    <TextView
-        android:id="@+id/description_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        tools:text="Description" />
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/description_text"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/white"
-        android:textSize="28sp"
-        tools:text="Title" />
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:textColor="@color/white"
+            tools:text="Title"/>
 
+        <TextView
+            android:id="@+id/description_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            tools:text="Description"/>
 
-</RelativeLayout>
+    </LinearLayout>
+
+</FrameLayout>
