@@ -4,7 +4,6 @@ import com.demo.bankexdh.model.rest.RegisterData;
 
 import io.realm.Realm;
 
-import static com.demo.bankexdh.utils.Const.DEVICE_NAME;
 
 public class DataBaseHelper {
 
@@ -61,7 +60,7 @@ public class DataBaseHelper {
                 DeviceModel newModel = new DeviceModel();
                 newModel.setId(DeviceModel.DEFAULT_ID);
                 newModel.setDeviceId(id);
-                newModel.setName(String.format(DEVICE_NAME, id));
+                newModel.setName(newModel.getName());
                 t.copyToRealmOrUpdate(newModel);
             });
         }

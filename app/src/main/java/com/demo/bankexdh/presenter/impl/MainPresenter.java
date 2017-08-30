@@ -3,6 +3,7 @@ package com.demo.bankexdh.presenter.impl;
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -46,7 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.demo.bankexdh.utils.Const.DEVICE_NAME;
+import static com.demo.bankexdh.utils.Const.DEVICE_ID_FORMAT;
 
 public class MainPresenter extends AbstractPresenter<NotificationView> implements ShakeDetector.Listener {
     private final ApiClient client;
@@ -132,10 +133,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     private RegisterBody getRegisterBody() {
         SimpleDateFormat sdf = new SimpleDateFormat("mmssSSS", Locale.getDefault());
-        String id = sdf.format(System.currentTimeMillis());
+        String deviceId = sdf.format(System.currentTimeMillis());
+        String formattedId = String.format(DEVICE_ID_FORMAT, "1234", Build.MODEL, deviceId);
         RegisterBody body = new RegisterBody();
-        body.setId(id);
-        body.setName(String.format(DEVICE_NAME, id));
+        body.setId(formattedId);
+        body.setName(formattedId);
         return body;
     }
 
@@ -196,7 +198,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
-                sendNotification(ShakeNotificationData.getNotification("Shaked"), new Callback<InsertNotification>() {
+                sendNotification(ShakeNotificationData.getNotification("Shaked", "1234"), new Callback<InsertNotification>() {
                     @Override
                     public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
                         Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
@@ -243,7 +245,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     private void sendLocationNotification(Location location, String link) {
         if (location != null && !TextUtils.isEmpty(link)) {
-            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, location.getLatitude(), location.getLongitude());
+            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, "1234",
+                    location.getLatitude(), location.getLongitude());
             sendNotification(wrapper, new Callback<InsertNotification>() {
                 @Override
                 public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
