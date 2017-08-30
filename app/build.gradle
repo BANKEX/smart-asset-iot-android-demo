@@ -101,5 +101,7 @@ dependencies {
 
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
 
+    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
+
     testCompile 'junit:junit:4.12'
 }
