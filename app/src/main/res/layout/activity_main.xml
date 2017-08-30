@@ -5,6 +5,7 @@
     android:id="@+id/parentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="com.demo.bankexdh.view.activity.MainActivity">
 
     <TextView
@@ -19,10 +20,9 @@
         android:layout_marginStart="@dimen/half_margin"
         android:layout_marginTop="@dimen/margin_four"
         android:ellipsize="end"
-        android:lines="2"
         android:gravity="center"
-        android:textColor="@color/primaryText"
-        android:textSize="@dimen/text_size"
+        android:lines="2"
+        android:textAppearance="@style/LabelTextAppearance"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -51,8 +51,7 @@
             android:layout_margin="@dimen/margin_four"
             android:layout_weight="2"
             android:text="@string/send_notifications"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/text_size" />
+            android:textAppearance="@style/LabelTextAppearance" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switcher"
@@ -109,31 +108,59 @@
         app:lottie_fileName="x_pop.json"
         app:lottie_loop="false" />
 
-    <com.github.jorgecastilloprz.FABProgressCircle
-        android:id="@+id/fabProgressCircle"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:arcColor="@color/colorProgress"
-        app:arcWidth="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.902"
+    <TextView
+        android:id="@+id/send_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_margin"
+        android:layout_marginEnd="@dimen/half_margin"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginRight="@dimen/half_margin"
+        android:layout_marginStart="@dimen/half_margin"
+        android:gravity="center"
+        android:text="@string/send_hint_label"
+        android:textAppearance="@style/LabelTextAppearance"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
-        app:layout_constraintVertical_bias="0.868"
-        app:roundedStroke="true">
+        app:layout_constraintRight_toRightOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginRight="@dimen/half_margin"
+        android:maxHeight="@dimen/buttonContainerMaxHeight"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/camera"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/shake_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="2dp"
-            android:src="@android:drawable/ic_menu_camera"
-            app:fabSize="normal" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/half_margin"
+            android:layout_weight="1"
+            android:background="@drawable/oval_button_with_text"
+            android:text="@string/button_shake_label"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark" />
 
-
-    </com.github.jorgecastilloprz.FABProgressCircle>
+        <Button
+            android:id="@+id/photo_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/half_margin"
+            android:layout_weight="1"
+            android:background="@drawable/oval_button_with_text"
+            android:text="@string/button_photo_label"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -144,5 +171,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uniqueId" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progress_bar_view"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:mpb_progressStyle="horizontal"
+        app:mpb_useIntrinsicPadding="false"
+        tools:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>

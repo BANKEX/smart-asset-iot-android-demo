@@ -15,13 +15,14 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,14 +30,15 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
 import com.demo.bankexdh.presenter.impl.MainPresenter;
+import com.demo.bankexdh.presenter.impl.MainPresenterFactory;
 import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.demo.bankexdh.utils.UIUtils;
-import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,16 +69,20 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     SwitchCompat switcher;
     @BindView(R.id.uniqueId)
     TextView deviceIdView;
-    @BindView(R.id.camera)
-    FloatingActionButton camera;
-    @BindView(R.id.fabProgressCircle)
-    FABProgressCircle fabProgressCircle;
     @BindView(R.id.animationAccelerometer)
     LottieAnimationView animationAccelerometer;
     @BindView(R.id.animationError)
     LottieAnimationView animationError;
     @BindView(R.id.animationLocation)
     LottieAnimationView animationLocation;
+    @BindView(R.id.send_hint)
+    View sendHint;
+    @BindView(R.id.shake_button)
+    View shakeButton;
+    @BindView(R.id.photo_button)
+    View photoButton;
+    @BindView(R.id.progress_bar_view)
+    View progressBar;
 
     private static final int TAKE_PHOTO = 2;
 
@@ -84,11 +90,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
         ButterKnife.bind(this);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
         switcher.setOnCheckedChangeListener((compoundButton, b) -> {
             presenter.setEnabled(b);
-            enableCameraFab(b);
+            enableSendNotificationViews(b);
             if (b) {
                 presenter.prepare();
                 sd = new ShakeDetector(presenter);
@@ -96,7 +105,24 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 setDeviceIdView();
             }
         });
+
         prepareAnimation();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                AboutActivity.start(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void prepareAnimation() {
@@ -216,19 +242,24 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @NonNull
     @Override
     protected PresenterFactory<MainPresenter> getPresenterFactory() {
-        return MainPresenter::new;
+        return new MainPresenterFactory(new PreferencesRepository(this));
     }
 
     @Override
     protected void onPresenterPrepared(@NonNull MainPresenter presenter) {
         this.presenter = presenter;
         switcher.setChecked(presenter.isEnabled());
-        enableCameraFab(presenter.isEnabled());
+        enableSendNotificationViews(presenter.isEnabled());
         if (switcher.isChecked()) {
             presenter.prepare();
             sd = new ShakeDetector(presenter);
             setDeviceIdView();
         }
+    }
+
+    @OnClick(R.id.shake_button)
+    void onShakeButtonClick() {
+        presenter.onShake();
     }
 
     @Override
@@ -239,7 +270,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onLocationNotificationSent() {
-        fabProgressCircle.hide();
+        progressBar.setVisibility(View.INVISIBLE);
         animationLocation.cancelAnimation();
         playAnimation(animationLocation);
 
@@ -247,9 +278,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onError() {
-        fabProgressCircle.hide();
+        progressBar.setVisibility(View.INVISIBLE);
         animationError.cancelAnimation();
         playAnimation(animationError);
+    }
+
+    @Override
+    public void showIntro() {
+        IntroActivity.start(this);
     }
 
     private void playAnimation(LottieAnimationView animationView) {
@@ -257,7 +293,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         vibrate(500);
     }
 
-    @OnClick(R.id.camera)
+    @OnClick(R.id.photo_button)
     void takeAPhotoCheck() {
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
@@ -325,7 +361,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     UIUtils.showInternetConnectionAlertDialog(this);
                     return;
                 }
-                fabProgressCircle.show();
+                progressBar.setVisibility(View.VISIBLE);
                 presenter.uploadFile(this);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -392,11 +428,15 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         snackbar.show();
     }
 
-    private void enableCameraFab(boolean b) {
-        if (b) {
-            camera.show();
+    private void enableSendNotificationViews(boolean enable) {
+        if (enable) {
+            sendHint.setVisibility(View.VISIBLE);
+            photoButton.setVisibility(View.VISIBLE);
+            shakeButton.setVisibility(View.VISIBLE);
         } else {
-            camera.hide();
+            sendHint.setVisibility(View.GONE);
+            photoButton.setVisibility(View.GONE);
+            shakeButton.setVisibility(View.GONE);
         }
     }
 

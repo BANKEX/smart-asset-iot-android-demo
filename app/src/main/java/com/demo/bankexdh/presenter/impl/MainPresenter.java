@@ -4,10 +4,12 @@ import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
 import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
+import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
 import com.demo.bankexdh.model.rest.RegisterBody;
 import com.demo.bankexdh.model.rest.RegisterData;
@@ -59,9 +61,22 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private Location location;
     private DataBaseHelper dbHelper = DataBaseHelper.getInstance();
 
-    public MainPresenter() {
+    private PreferencesRepository preferencesRepository;
+
+    public MainPresenter(PreferencesRepository preferencesRepository) {
         client = RestHelper.getInstance().getApiClient();
         enabled = dbHelper.isEnabled();
+        this.preferencesRepository = preferencesRepository;
+    }
+
+    @Override
+    public void onViewAttached(NotificationView view) {
+        super.onViewAttached(view);
+
+        if (preferencesRepository.isFirstRun()) {
+            view.showIntro();
+            preferencesRepository.setFirstRun(false);
+        }
     }
 
     public void prepare() {
@@ -172,8 +187,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         return ImageUtils.getInstance().createImageFile(context);
     }
 
+    public void onShake() {
+        hearShake(null);
+    }
+
     @Override
-    public void hearShake(String timestamp) {
+    public void hearShake(@Nullable String timestamp) {
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
