@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/description_text"
+        android:ellipsize="end"
+        android:lines="1"
         android:textColor="@color/white"
         android:textSize="28sp"
         tools:text="Title" />
