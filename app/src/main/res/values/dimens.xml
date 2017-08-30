@@ -5,4 +5,5 @@
     <dimen name="padding">16dp</dimen>
     <dimen name="margin_four">4dp</dimen>
     <dimen name="text_size">16sp</dimen>
+    <dimen name="buttonContainerMaxHeight">54dp</dimen>
 </resources>

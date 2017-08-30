@@ -31,9 +31,12 @@
 
         <activity
             android:name=".view.activity.AboutActivity"
-            android:label="@string/activity_about_label" />
+            android:label="@string/activity_about_label"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".view.activity.IntroActivity" />
+        <activity
+            android:name=".view.activity.IntroActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

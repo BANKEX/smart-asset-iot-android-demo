@@ -129,8 +129,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="@dimen/half_margin"
+        android:layout_marginRight="@dimen/half_margin"
+        android:maxHeight="@dimen/buttonContainerMaxHeight"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -143,10 +144,10 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/half_margin"
             android:layout_weight="1"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark"
             android:background="@drawable/oval_button_with_text"
-            android:text="@string/button_shake_label" />
+            android:text="@string/button_shake_label"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
             android:id="@+id/photo_button"
@@ -155,10 +156,10 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/half_margin"
             android:layout_weight="1"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark"
             android:background="@drawable/oval_button_with_text"
-            android:text="@string/button_photo_label" />
+            android:text="@string/button_photo_label"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
     <FrameLayout

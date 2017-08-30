@@ -13,14 +13,10 @@
         <item name="android:textSize">@dimen/text_size</item>
     </style>
 
-    <style name="NoActionBar.DarkStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
-    </style>
-
-    <style name="NoActionBar" parent="NoActionBar.DarkStatusBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 </resources>
