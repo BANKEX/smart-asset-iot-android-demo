@@ -20,7 +20,7 @@
 
     <string name="button_shake_label">Send Shake</string>
     <string name="button_photo_label">Send Photo And Location</string>
-    <string name="send_hint_label">Check for validation confirmation on the Smart Asset page</string>
+    <string name="send_hint_label">Check for validation confirmation\n on the Smart Asset page</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
 </resources>
