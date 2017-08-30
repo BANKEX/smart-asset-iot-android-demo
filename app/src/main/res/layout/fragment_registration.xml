@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id="@+id/parent_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,35 +8,50 @@
     android:layout_height="match_parent"
     android:padding="@dimen/padding">
 
-    <EditText
-        android:id="@+id/asset_id_edit"
+    <android.support.constraint.Guideline
+        android:id="@+id/vertical_center_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/asset_id_edit_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/asset_id_hint"
-        android:layout_marginRight="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/scan_button"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/vertical_center_guideline"
+        android:layout_marginBottom="8dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/asset_id_edit"
+            android:maxLines="1"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/asset_id_hint" />
+    </android.support.design.widget.TextInputLayout>
 
     <ImageView
         android:id="@+id/scan_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/asset_id_edit"
-        android:src="@drawable/ic_file"
-        android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="@+id/asset_id_edit"
-        />
+        app:layout_constraintTop_toTopOf="@+id/asset_id_edit_container"
+        app:layout_constraintBottom_toBottomOf="@+id/asset_id_edit_container"
+        android:src="@drawable/ic_qr_code"
+        android:scaleType="center"
+        android:background="?android:attr/selectableItemBackground" />
 
     <Button
         android:id="@+id/register_button"
+        style="@style/OvalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/asset_id_edit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/register_label"/>
+        app:layout_constraintTop_toTopOf="@+id/vertical_center_guideline"
+        android:text="@string/register_label"
+        />
 </android.support.constraint.ConstraintLayout>

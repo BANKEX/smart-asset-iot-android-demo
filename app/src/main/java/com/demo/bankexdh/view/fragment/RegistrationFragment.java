@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ public class RegistrationFragment
         extends BasePresenterFragment<RegistrationPresenter, RegistrationView>
         implements RegistrationView {
 
+    @BindView(R.id.parent_container)
+    View parentContainer;
     @BindView(R.id.asset_id_edit)
     EditText assetIdEdit;
     @BindView(R.id.scan_button)
@@ -59,8 +62,11 @@ public class RegistrationFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        scanButton.setOnClickListener(button ->
-                IntentIntegrator.forSupportFragment(this).initiateScan());
+        scanButton.setOnClickListener(button -> {
+            IntentIntegrator.forSupportFragment(this)
+                    .setPrompt(getString(R.string.scan_barcode_prompt))
+                    .initiateScan();
+        });
     }
 
     @Override
@@ -100,6 +106,7 @@ public class RegistrationFragment
 
     @Override
     public void showGetAssetIdError() {
-        Toast.makeText(getActivity(), R.string.error_get_asset_id, Toast.LENGTH_SHORT).show();
+        Snackbar.make(parentContainer, R.string.error_get_asset_id, Snackbar.LENGTH_SHORT)
+                .show();
     }
 }
