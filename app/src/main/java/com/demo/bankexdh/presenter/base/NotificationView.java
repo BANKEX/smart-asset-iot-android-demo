@@ -7,5 +7,4 @@ public interface NotificationView extends MvpView {
 
     void onError();
 
-    void showIntro();
 }

@@ -64,21 +64,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     private PreferencesRepository preferencesRepository;
 
-    public MainPresenter(PreferencesRepository preferencesRepository) {
+    public MainPresenter() {
         client = RestHelper.getInstance().getApiClient();
         enabled = dbHelper.isEnabled();
-        this.preferencesRepository = preferencesRepository;
     }
 
-    @Override
-    public void onViewAttached(NotificationView view) {
-        super.onViewAttached(view);
-
-        if (preferencesRepository.isFirstRun()) {
-            view.showIntro();
-            preferencesRepository.setFirstRun(false);
-        }
-    }
 
     public void prepare() {
         if (dbHelper.isDeviceRegistered()) {

@@ -4,4 +4,6 @@ public interface RegistrationView extends MvpView {
     void showAssetId(String assetId);
 
     void showGetAssetIdError();
+
+    void showIntro();
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.demo.bankexdh.R;
+import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
 import com.demo.bankexdh.presenter.base.RegistrationView;
@@ -40,7 +41,7 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     @NonNull
     @Override
     protected PresenterFactory<RegistrationPresenter> getPresenterFactory() {
-        return RegistrationPresenter::new;
+        return () -> new RegistrationPresenter(new PreferencesRepository(RegistrationActivity.this));
     }
 
     @Override
@@ -113,6 +114,11 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
             presenter.onScanCancelled();
         }
         scannedContent = null;
+    }
+
+    @Override
+    public void showIntro() {
+        IntroActivity.start(this);
     }
 
     @Override
