@@ -6,4 +6,8 @@ public interface RegistrationView extends MvpView {
     void showGetAssetIdError();
 
     void showIntro();
+
+    void onRegistered();
+
+    void onRegistrationError();
 }

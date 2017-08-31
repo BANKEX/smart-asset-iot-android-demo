@@ -3,24 +3,17 @@ package com.demo.bankexdh.presenter.impl;
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.demo.bankexdh.model.ImageManager;
-import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
-import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.model.rest.ImageNotificationData;
-import com.demo.bankexdh.model.rest.RegisterBody;
-import com.demo.bankexdh.model.rest.RegisterData;
 import com.demo.bankexdh.model.rest.RestHelper;
 import com.demo.bankexdh.model.rest.ShakeNotificationData;
-import com.demo.bankexdh.model.rest.api.Register;
 import com.demo.bankexdh.model.store.DataBaseHelper;
 import com.demo.bankexdh.presenter.base.AbstractPresenter;
 import com.demo.bankexdh.presenter.base.NotificationView;
-import com.demo.bankexdh.utils.Const;
 import com.demo.bankexdh.utils.ImageUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.devicehive.rest.ApiClient;
@@ -29,15 +22,10 @@ import com.devicehive.rest.auth.ApiKeyAuth;
 import com.devicehive.rest.model.DeviceNotificationWrapper;
 import com.devicehive.rest.model.InsertNotification;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -47,8 +35,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.demo.bankexdh.utils.Const.DEVICE_ID_FORMAT;
-
 public class MainPresenter extends AbstractPresenter<NotificationView> implements ShakeDetector.Listener {
     private final ApiClient client;
 
@@ -56,13 +42,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     private boolean enabled;
     private boolean executed = true;
-    private AtomicBoolean isRegistrationInProgress = new AtomicBoolean(false);
 
     private String link;
     private Location location;
     private DataBaseHelper dbHelper = DataBaseHelper.getInstance();
-
-    private PreferencesRepository preferencesRepository;
 
     public MainPresenter() {
         client = RestHelper.getInstance().getApiClient();
@@ -74,7 +57,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         if (dbHelper.isDeviceRegistered()) {
             setupPresenter();
         } else {
-            register();
+            if (!isViewNull()) {
+                view.onUnregistered();
+            }
         }
 
     }
@@ -90,47 +75,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 ApiKeyAuth.newInstance(accessToken));
     }
 
-    private void register() {
-        Register registerCall = client.createService(Register.class);
-        RegisterBody body = getRegisterBody();
-        registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
-            @Override
-            public void onResponse(Call<RegisterData> call, Response<RegisterData> response) {
-                Timber.d(response.toString());
-                if (response.isSuccessful()) {
-                    Timber.d(response.body().toString());
-                    RegisterData data = response.body();
-                    dbHelper.insertUserModel(data);
-                    dbHelper.insertDevice(data);
-
-                    addAuth(data.getToken().getAccessToken());
-                    createServices();
-
-                    EventBus.getDefault().post(DeviceIdUpdateEvent.newInstance());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RegisterData> call, Throwable t) {
-                Timber.d(t.getMessage());
-            }
-        });
-    }
-
     private void createServices() {
         deviceNotificationApi = client.createService(DeviceNotificationApi.class);
     }
-
-    private RegisterBody getRegisterBody() {
-        SimpleDateFormat sdf = new SimpleDateFormat("mmssSSS", Locale.getDefault());
-        String deviceId = sdf.format(System.currentTimeMillis());
-        String formattedId = String.format(DEVICE_ID_FORMAT, "1234", Build.MODEL, deviceId);
-        RegisterBody body = new RegisterBody();
-        body.setId(formattedId);
-        body.setName(formattedId);
-        return body;
-    }
-
 
     public void uploadFile(Context context) {
         Observable.just(context)
@@ -188,7 +135,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         if (enabled && executed) {
             executed = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
-                sendNotification(ShakeNotificationData.getNotification("Shaked", "1234"), new Callback<InsertNotification>() {
+                sendNotification(ShakeNotificationData.getNotification("Shaked",
+                        dbHelper.getDeviceName(),
+                        dbHelper.getDeviceName()), new Callback<InsertNotification>() {
                     @Override
                     public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
                         Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
@@ -196,9 +145,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             if (!isViewNull()) {
                                 view.onShakeNotificationSent();
                             }
-                            isRegistrationInProgress.set(false);
                         } else {
-                            register(response.code());
+                            if (!isViewNull()) {
+                                view.onUnregistered();
+                            }
                         }
                         executed = true;
                     }
@@ -216,18 +166,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         }
     }
 
-    private void register(int code) {
-        if (!isViewNull()) {
-            view.onError();
-        }
-        if (code == 401) {
-            if (!isRegistrationInProgress.get()) {
-                isRegistrationInProgress.set(true);
-                register();
-            }
-        }
-    }
-
     public void onLocationChanged(Location location) {
         this.location = location;
     }
@@ -235,7 +173,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private void sendLocationNotification(Location location, String link) {
         if (location != null && !TextUtils.isEmpty(link)) {
 
-            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link, "1234",
+            DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link,
+                    dbHelper.getDeviceName(),
+                    dbHelper.getDeviceId(),
                     location.getLatitude(), location.getLongitude());
             sendNotification(wrapper, new Callback<InsertNotification>() {
                 @Override
@@ -246,9 +186,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             view.onLocationNotificationSent();
                         }
                         clearLocationNotificationData();
-                        isRegistrationInProgress.set(false);
                     } else {
-                        register(response.code());
+                        if (!isViewNull()) {
+                            view.onUnregistered();
+                        }
                     }
                     executed = true;
                 }

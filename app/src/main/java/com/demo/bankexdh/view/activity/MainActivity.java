@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
 import com.demo.bankexdh.R;
-import com.demo.bankexdh.model.event.DeviceIdUpdateEvent;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.NotificationView;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
@@ -38,10 +37,6 @@ import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.ShakeDetector;
 import com.demo.bankexdh.utils.UIUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,8 +56,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private MainPresenter presenter;
     private SensorManager mSensorManager;
     private ShakeDetector sd;
-    @BindView(R.id.parentView)
-    View parentView;
+    @BindView(R.id.buttonContainer)
+    View buttonContainer;
     @BindView(R.id.switcher)
     SwitchCompat switcher;
     @BindView(R.id.uniqueId)
@@ -84,6 +79,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     private static final int TAKE_PHOTO = 2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +96,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 presenter.prepare();
                 sd = new ShakeDetector(presenter);
                 sd.start(mSensorManager);
-                setDeviceIdView();
             }
         });
 
@@ -204,18 +199,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (sd != null) {
@@ -281,6 +264,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         playAnimation(animationError);
     }
 
+    @Override
+    public void onUnregistered() {
+        startActivity(new Intent(this, RegistrationActivity.class));
+        finish();
+    }
+
     private void playAnimation(LottieAnimationView animationView) {
         animationView.playAnimation();
         vibrate(500);
@@ -294,7 +283,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void takeAPhoto() {
         if (isLocationDisabled()) {
-            Snackbar snackbar = Snackbar.make(parentView, R.string.location_disabled_message,
+            Snackbar snackbar = Snackbar.make(buttonContainer, R.string.location_disabled_message,
                     Snackbar.LENGTH_INDEFINITE);
             snackbar.setAction(getString(android.R.string.ok),
                     v -> snackbar.dismiss());
@@ -405,11 +394,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateDeviceId(DeviceIdUpdateEvent event) {
-        setDeviceIdView();
-    }
-
     private void setDeviceIdView() {
         String deviceId = presenter.getDeviceId();
         deviceIdView.setVisibility(TextUtils.isEmpty(deviceId) ? View.INVISIBLE : View.VISIBLE);
@@ -417,7 +401,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void onPhotoUploadFail(@Nullable String message) {
-        Snackbar snackbar = Snackbar.make(parentView, "Image uploading failed", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(buttonContainer, "Image uploading failed", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(getString(android.R.string.ok),
                 v -> snackbar.dismiss());
 

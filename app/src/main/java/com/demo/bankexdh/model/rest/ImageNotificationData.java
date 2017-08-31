@@ -13,6 +13,8 @@ public class ImageNotificationData {
 
     private static final String NOTIFICATION_TITLE = "upload";
 
+    @SerializedName("deviceName")
+    private String deviceName;
     @SerializedName("imageUrl")
     private String imageUrl;
     @SerializedName("latitude")
@@ -21,11 +23,12 @@ public class ImageNotificationData {
     private Double longitude;
 
 
-    public static DeviceNotificationWrapper getNotification(String imageUrl, String assetId, Double latitude, Double longitude) {
+    public static DeviceNotificationWrapper getNotification(String imageUrl, String deviceName, String assetId, Double latitude, Double longitude) {
         DeviceNotificationWrapper wrapper = new DeviceNotificationWrapper();
         JsonStringWrapper jsonStringWrapper = new JsonStringWrapper();
 
         ImageNotificationData data = new ImageNotificationData();
+        data.setDeviceName(deviceName);
         data.setImageUrl(imageUrl);
         data.setLatitude(latitude);
         data.setLongitude(longitude);

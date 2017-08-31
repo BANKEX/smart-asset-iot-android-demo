@@ -8,9 +8,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.prefs.PreferencesRepository;
+import com.demo.bankexdh.model.store.DataBaseHelper;
 import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
 import com.demo.bankexdh.presenter.base.RegistrationView;
@@ -33,6 +36,12 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     View parentContainer;
     @BindView(R.id.asset_id_edit)
     EditText assetIdEdit;
+    @BindView(R.id.registrationProgressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.register_button)
+    View registrationButton;
+    @BindView(R.id.scan_button)
+    View scanButton;
     private RegistrationPresenter presenter;
 
     private boolean scannedContentReceived;
@@ -86,6 +95,18 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
         RegistrationActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    @OnClick(R.id.register_button)
+    void register() {
+        String value = assetIdEdit.getText().toString();
+        if (presenter.validate(value)) {
+            showLoading(true);
+            presenter.register(value);
+        } else {
+            Toast.makeText(this, "EMPTY ASSET ID", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -102,7 +123,10 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     @Override
     public void onStart() {
         super.onStart();
-
+        if (DataBaseHelper.getInstance().isDeviceRegistered()) {
+            onRegistered();
+            return;
+        }
         if (!scannedContentReceived) {
             return;
         }
@@ -117,8 +141,26 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        showLoading(DataBaseHelper.getInstance().isDeviceRegistered() && presenter.isRegistration());
+    }
+
+    @Override
     public void showIntro() {
         IntroActivity.start(this);
+    }
+
+    @Override
+    public void onRegistered() {
+        showLoading(false);
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onRegistrationError() {
+        showLoading(false);
     }
 
     @Override
@@ -136,5 +178,20 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     @Override
     protected void setupActivityComponent() {
 
+    }
+
+    void showLoading(boolean show) {
+        enableViews(!show);
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    void enableViews(boolean enable) {
+        assetIdEdit.setEnabled(enable);
+        registrationButton.setEnabled(enable);
+        scanButton.setEnabled(enable);
     }
 }

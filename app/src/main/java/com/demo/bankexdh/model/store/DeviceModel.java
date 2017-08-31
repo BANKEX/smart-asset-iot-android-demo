@@ -20,6 +20,7 @@ public class DeviceModel extends RealmObject {
     private Long id;
     private String deviceId;
     private String name;
+    private String deviceName;
     private String data;
     private Long networkId;
     private Boolean isBlocked;

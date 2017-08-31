@@ -8,26 +8,25 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
 import lombok.Data;
 
 @Data
 public class ShakeNotificationData {
     private static final String NOTIFICATION_TITLE = "shake";
 
+    @SerializedName("deviceName")
+    private String deviceName;
     @SerializedName("shake")
     private String shake;
     @SerializedName("shakenAt")
     private String shakenAt;
-    @SerializedName("fakeData")
-    private List<Long> fakeData;
 
-    public static DeviceNotificationWrapper getNotification(String shakeMessage, String assetId) {
+    public static DeviceNotificationWrapper getNotification(String shakeMessage, String deviceName, String assetId) {
         DeviceNotificationWrapper wrapper = new DeviceNotificationWrapper();
         JsonStringWrapper jsonStringWrapper = new JsonStringWrapper();
         ShakeNotificationData shake = new ShakeNotificationData();
         shake.setShake(String.valueOf(shakeMessage));
+        shake.setDeviceName(deviceName);
         shake.setShakenAt(DateTime.now().toString());
         jsonStringWrapper.setJsonString(new Gson().toJson(shake));
         wrapper.setParameters(jsonStringWrapper);

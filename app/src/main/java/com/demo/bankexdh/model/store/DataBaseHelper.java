@@ -1,8 +1,15 @@
 package com.demo.bankexdh.model.store;
 
+import android.os.Build;
+
 import com.demo.bankexdh.model.rest.RegisterData;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import io.realm.Realm;
+
+import static com.demo.bankexdh.utils.Const.DEVICE_ID_FORMAT;
 
 
 public class DataBaseHelper {
@@ -14,7 +21,6 @@ public class DataBaseHelper {
     public static DataBaseHelper getInstance() {
         return DataBaseHelper.InstanceHolder.INSTANCE;
     }
-
 
 
     public void setEnabled(boolean enabled) {
@@ -61,9 +67,16 @@ public class DataBaseHelper {
                 newModel.setId(DeviceModel.DEFAULT_ID);
                 newModel.setDeviceId(id);
                 newModel.setName(newModel.getName());
+                newModel.setDeviceName(createDeviceName(id));
                 t.copyToRealmOrUpdate(newModel);
             });
         }
+    }
+
+    private String createDeviceName(String assetId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("mmssSSS", Locale.getDefault());
+        String deviceId = sdf.format(System.currentTimeMillis());
+        return String.format(DEVICE_ID_FORMAT, assetId, Build.MODEL, deviceId);
     }
 
     public String getToken() {
@@ -82,6 +95,19 @@ public class DataBaseHelper {
                 return null;
             } else {
                 return model.getDeviceId();
+            }
+        }
+    }
+
+    public String getDeviceName() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            DeviceModel model = realm.where(DeviceModel.class)
+                    .equalTo(DeviceModel.ID,
+                            DeviceModel.DEFAULT_ID).findFirst();
+            if (model == null) {
+                return null;
+            } else {
+                return model.getDeviceName();
             }
         }
     }
