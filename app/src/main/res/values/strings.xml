@@ -28,4 +28,6 @@
     <string name="asset_id_hint">Asset ID</string>
     <string name="error_get_asset_id">Failed to get asset id from the barcode</string>
     <string name="scan_barcode_prompt">Place a barcode inside the viewfinder rectangle to scan it.</string>
+    <string name="error_incorrect_asset_id">Incorrect asset id</string>
+    <string name="something_went_wrong">Something went wrong</string>
 </resources>

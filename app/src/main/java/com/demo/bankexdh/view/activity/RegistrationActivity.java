@@ -17,6 +17,8 @@ import com.demo.bankexdh.presenter.base.BasePresenterActivity;
 import com.demo.bankexdh.presenter.base.PresenterFactory;
 import com.demo.bankexdh.presenter.base.RegistrationView;
 import com.demo.bankexdh.presenter.impl.RegistrationPresenter;
+import com.demo.bankexdh.utils.ClientUtils;
+import com.demo.bankexdh.utils.UIUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -96,15 +98,16 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
 
     @OnClick(R.id.register_button)
     void register() {
+        if (!ClientUtils.isNetworkConnected(this)){
+            UIUtils.showInternetConnectionAlertDialog(this);
+            return;
+        }
         String value = assetIdEdit.getText().toString();
         if (presenter.validate(value)) {
             showLoading(true);
             presenter.register(value);
         } else {
-            Snackbar snackbar = Snackbar.make(parentContainer, "Incorrect asset id", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(getString(android.R.string.ok),
-                    v -> snackbar.dismiss());
-
+            Snackbar snackbar = Snackbar.make(parentContainer,R.string.error_incorrect_asset_id, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
 
@@ -164,6 +167,8 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     @Override
     public void onRegistrationError() {
         showLoading(false);
+        Snackbar.make(parentContainer, R.string.something_went_wrong, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     @Override
