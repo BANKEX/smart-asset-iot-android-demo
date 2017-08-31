@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -147,14 +149,21 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             }
                         } else {
                             if (!isViewNull()) {
-                                view.onUnregistered();
+                                if (response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED) {
+                                    dbHelper.clearDevice();
+                                    view.onUnregistered();
+                                } else {
+                                    view.onError();
+                                }
                             }
                         }
+
                         executed = true;
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable
+                            t) {
                         Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
                         if (!isViewNull()) {
                             view.onError();
@@ -164,6 +173,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 });
             }
         }
+
     }
 
     public void onLocationChanged(Location location) {
@@ -188,7 +198,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                         clearLocationNotificationData();
                     } else {
                         if (!isViewNull()) {
-                            view.onUnregistered();
+                            if (response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED) {
+                                dbHelper.clearDevice();
+                                view.onUnregistered();
+                            } else {
+                                view.onError();
+                            }
                         }
                     }
                     executed = true;

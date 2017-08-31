@@ -119,4 +119,10 @@ public class DataBaseHelper {
             return model != null;
         }
     }
+
+    public void clearDevice() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransaction(t -> realm.delete(DeviceModel.class));
+        }
+    }
 }
