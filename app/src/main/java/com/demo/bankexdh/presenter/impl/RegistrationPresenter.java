@@ -2,7 +2,6 @@ package com.demo.bankexdh.presenter.impl;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.demo.bankexdh.model.prefs.PreferencesRepository;
 import com.demo.bankexdh.model.rest.RegisterBody;
@@ -121,9 +120,6 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
     }
 
     public boolean validate(@NonNull String assetId) {
-        if (TextUtils.isEmpty(assetId)) {
-            return false;
-        }
         long value;
         try {
             value = Long.valueOf(assetId);

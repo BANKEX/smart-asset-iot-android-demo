@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -35,6 +39,8 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
 
     @BindView(R.id.parent_container)
     View parentContainer;
+    @BindView(R.id.asset_id_edit_container)
+    TextInputLayout assetIdEditContainer;
     @BindView(R.id.asset_id_edit)
     EditText assetIdEdit;
     @BindView(R.id.registrationProgressBar)
@@ -47,6 +53,25 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
 
     private boolean scannedContentReceived;
     private String scannedContent;
+
+    TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            assetIdEditContainer.setError(null);
+            assetIdEditContainer.setErrorEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            assetIdEditContainer.setError(null);
+            assetIdEditContainer.setErrorEnabled(false);
+        }
+    };
 
     @NonNull
     @Override
@@ -65,6 +90,7 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         ButterKnife.bind(this);
+        assetIdEdit.addTextChangedListener(watcher);
     }
 
     @OnClick(R.id.scan_button)
@@ -98,16 +124,21 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
 
     @OnClick(R.id.register_button)
     void register() {
-        if (!ClientUtils.isNetworkConnected(this)){
+        if (!ClientUtils.isNetworkConnected(this)) {
             UIUtils.showInternetConnectionAlertDialog(this);
             return;
         }
         String value = assetIdEdit.getText().toString();
+        if (TextUtils.isEmpty(value)) {
+            assetIdEditContainer.setErrorEnabled(true);
+            assetIdEditContainer.setError(getString(R.string.asset_id_empty));
+            return;
+        }
         if (presenter.validate(value)) {
             showLoading(true);
             presenter.register(value);
         } else {
-            Snackbar snackbar = Snackbar.make(parentContainer,R.string.error_incorrect_asset_id, Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(parentContainer, R.string.error_incorrect_asset_id, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
 
