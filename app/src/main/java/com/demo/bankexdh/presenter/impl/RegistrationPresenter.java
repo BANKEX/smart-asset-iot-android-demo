@@ -26,7 +26,7 @@ import timber.log.Timber;
 public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
 
     private static final String ASSET_ID_QUERY_PARAMETER = "id";
-    private static final int MIN_VALUE = 0;
+    private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
     private final PreferencesRepository preferencesRepository;
     private final ApiClient client;
@@ -131,7 +131,7 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
             return false;
         }
 
-        return !(value < MIN_VALUE && value > MAX_VALUE);
+        return (value >= MIN_VALUE && value <= MAX_VALUE);
     }
 
     private String parseAssetId(String contents) {

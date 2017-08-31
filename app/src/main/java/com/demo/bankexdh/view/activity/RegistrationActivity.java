@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.model.prefs.PreferencesRepository;
@@ -102,7 +101,11 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
             showLoading(true);
             presenter.register(value);
         } else {
-            Toast.makeText(this, "EMPTY ASSET ID", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(parentContainer, "Incorrect asset id", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(getString(android.R.string.ok),
+                    v -> snackbar.dismiss());
+
+            snackbar.show();
         }
 
     }
