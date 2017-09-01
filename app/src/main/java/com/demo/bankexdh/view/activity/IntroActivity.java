@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.demo.bankexdh.R;
 import com.demo.bankexdh.view.fragment.IntroSlideFragment;
+import com.demo.bankexdh.view.fragment.IntroSlideFragmentLink;
 import com.github.paolorotolo.appintro.AppIntro;
 
 import butterknife.BindString;
@@ -37,7 +38,7 @@ public class IntroActivity extends AppIntro {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        addSlide(IntroSlideFragment.newInstance(firstTitle, firstDescription));
+        addSlide(IntroSlideFragmentLink.newInstance());
         addSlide(IntroSlideFragment.newInstance(secondTitle, secondDescription));
         setSkipText(getString(R.string.skip));
         setDoneText(getString(R.string.done));

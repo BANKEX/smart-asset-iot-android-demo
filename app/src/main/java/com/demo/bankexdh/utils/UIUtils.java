@@ -1,6 +1,9 @@
 package com.demo.bankexdh.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 
 import com.demo.bankexdh.R;
@@ -26,5 +29,13 @@ public class UIUtils {
         AlertDialog dialog = builder.create();
         // display dialog
         dialog.show();
+    }
+
+    public static void openInBrowser(Context context,
+                                     @StringRes int urlResId) {
+        context.startActivity(new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(context.getString(urlResId))
+        ));
     }
 }

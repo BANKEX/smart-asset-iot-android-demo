@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.demo.bankexdh.R;
+import com.demo.bankexdh.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -35,5 +37,10 @@ public class AboutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    }
+
+    @OnClick(R.id.link)
+    void open(){
+        UIUtils.openInBrowser(this,R.string.about_info_link);
     }
 }
