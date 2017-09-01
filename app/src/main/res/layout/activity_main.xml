@@ -8,59 +8,24 @@
     android:animateLayoutChanges="true"
     tools:context="com.demo.bankexdh.view.activity.MainActivity">
 
+
     <TextView
-        android:id="@+id/uniqueId"
-        android:layout_width="wrap_content"
+        android:id="@+id/description"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_four"
-        android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginLeft="@dimen/half_margin"
-        android:layout_marginRight="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:layout_marginTop="@dimen/margin_four"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:lines="2"
-        android:textAppearance="@style/LabelTextAppearance"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:text="12345" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginLeft="@dimen/half_margin"
-        android:layout_marginRight="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:layout_marginTop="@dimen/half_margin"
-        android:orientation="horizontal"
         android:padding="@dimen/padding"
+        android:layout_weight="2"
+        android:text="@string/description"
+        android:textAppearance="@style/LabelTextAppearance"
+        android:layout_marginLeft="8dp"
+        android:gravity="center|start"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_four"
-            android:layout_weight="2"
-            android:text="@string/send_notifications"
-            android:textAppearance="@style/LabelTextAppearance" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switcher"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_four"
-            android:layout_weight="1" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="@+id/progress_bar_view"
+        android:layout_marginTop="8dp" />
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -69,14 +34,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_margin"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
+        app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintVertical_bias="0.135"
         app:lottie_fileName="done_button.json"
-        app:lottie_loop="false" />
+        app:lottie_loop="false"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationLocation"
@@ -84,14 +50,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_margin"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
+        app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintVertical_bias="0.135"
         app:lottie_fileName="location_pin.json"
-        app:lottie_loop="false" />
+        app:lottie_loop="false"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationError"
@@ -99,30 +66,16 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_margin"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId"
+        app:layout_constraintTop_toBottomOf="@+id/description"
         app:layout_constraintVertical_bias="0.135"
         app:lottie_fileName="x_pop.json"
-        app:lottie_loop="false" />
+        app:lottie_loop="false"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonContainer" />
 
-    <TextView
-        android:id="@+id/send_hint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/half_margin"
-        android:layout_marginEnd="@dimen/half_margin"
-        android:layout_marginLeft="@dimen/half_margin"
-        android:layout_marginRight="@dimen/half_margin"
-        android:layout_marginStart="@dimen/half_margin"
-        android:gravity="center"
-        android:text="@string/send_hint_label"
-        android:textAppearance="@style/LabelTextAppearance"
-        app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
         android:id="@+id/buttonContainer"
@@ -166,7 +119,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uniqueId" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/progress_bar_view"

@@ -19,12 +19,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SwitchCompat;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.demo.bankexdh.BuildConfig;
@@ -58,18 +55,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private ShakeDetector sd;
     @BindView(R.id.buttonContainer)
     View buttonContainer;
-    @BindView(R.id.switcher)
-    SwitchCompat switcher;
-    @BindView(R.id.uniqueId)
-    TextView deviceIdView;
     @BindView(R.id.animationAccelerometer)
     LottieAnimationView animationAccelerometer;
     @BindView(R.id.animationError)
     LottieAnimationView animationError;
     @BindView(R.id.animationLocation)
     LottieAnimationView animationLocation;
-    @BindView(R.id.send_hint)
-    View sendHint;
     @BindView(R.id.shake_button)
     View shakeButton;
     @BindView(R.id.photo_button)
@@ -88,17 +79,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         ButterKnife.bind(this);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        switcher.setOnCheckedChangeListener((compoundButton, b) -> {
-            presenter.setEnabled(b);
-            enableSendNotificationViews(b);
-            if (b) {
-                presenter.prepare();
-                sd = new ShakeDetector(presenter);
-                sd.start(mSensorManager);
-            }
-        });
-
         prepareAnimation();
     }
 
@@ -192,19 +172,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         animationLocation.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.switcher)
-    void sendNotification() {
-        presenter.setEnabled(switcher.isChecked());
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         if (sd != null) {
             sd.start(mSensorManager);
         }
-        setDeviceIdView();
     }
 
     @Override
@@ -229,13 +202,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     protected void onPresenterPrepared(@NonNull MainPresenter presenter) {
         this.presenter = presenter;
-        switcher.setChecked(presenter.isEnabled());
-        enableSendNotificationViews(presenter.isEnabled());
-        if (switcher.isChecked()) {
-            presenter.prepare();
-            sd = new ShakeDetector(presenter);
-            setDeviceIdView();
-        }
+        presenter.prepare();
+        sd = new ShakeDetector(presenter);
     }
 
     @OnClick(R.id.shake_button)
@@ -394,30 +362,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    private void setDeviceIdView() {
-        String deviceId = presenter.getDeviceId();
-        deviceIdView.setVisibility(TextUtils.isEmpty(deviceId) ? View.INVISIBLE : View.VISIBLE);
-        deviceIdView.setText(String.format(getString(R.string.deviceId), deviceId));
-    }
-
     public void onPhotoUploadFail(@Nullable String message) {
         Snackbar snackbar = Snackbar.make(buttonContainer, "Image uploading failed", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(getString(android.R.string.ok),
                 v -> snackbar.dismiss());
 
         snackbar.show();
-    }
-
-    private void enableSendNotificationViews(boolean enable) {
-        if (enable) {
-            sendHint.setVisibility(View.VISIBLE);
-            photoButton.setVisibility(View.VISIBLE);
-            shakeButton.setVisibility(View.VISIBLE);
-        } else {
-            sendHint.setVisibility(View.GONE);
-            photoButton.setVisibility(View.GONE);
-            shakeButton.setVisibility(View.GONE);
-        }
     }
 
 }

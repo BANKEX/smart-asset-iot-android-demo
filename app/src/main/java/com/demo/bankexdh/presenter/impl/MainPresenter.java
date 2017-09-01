@@ -111,17 +111,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     }
 
-    public boolean isEnabled() {
-        return dbHelper.isEnabled();
-    }
-
     public String getDeviceId() {
         return dbHelper.getDeviceId();
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        dbHelper.setEnabled(enabled);
     }
 
     public File createImageFile(Context context) throws IOException, NoSuchAlgorithmException {

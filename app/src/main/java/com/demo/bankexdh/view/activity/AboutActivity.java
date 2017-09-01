@@ -3,9 +3,14 @@ package com.demo.bankexdh.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.demo.bankexdh.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -14,10 +19,21 @@ public class AboutActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-    }
+        ButterKnife.bind(this);
 
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+    }
 }
