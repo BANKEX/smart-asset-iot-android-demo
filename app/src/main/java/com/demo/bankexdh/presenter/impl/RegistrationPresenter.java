@@ -28,7 +28,7 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
     private final PreferencesRepository preferencesRepository;
-    private final ApiClient client;
+    private ApiClient client;
 
     private DataBaseHelper dbHelper = DataBaseHelper.getInstance();
 
@@ -36,7 +36,6 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
 
     public RegistrationPresenter(PreferencesRepository preferencesRepository) {
         this.preferencesRepository = preferencesRepository;
-        client = RestHelper.getInstance().getApiClient();
         isRegistrationInProgress.set(false);
     }
 
@@ -46,11 +45,6 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
 
     public boolean isRegistration() {
         return isRegistrationInProgress.get();
-    }
-
-    private void setupPresenter() {
-        String token = dbHelper.getToken();
-        addAuth(token);
     }
 
     private void addAuth(String accessToken) {
@@ -102,6 +96,7 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
 
     @Override
     public void onViewAttached(RegistrationView view) {
+        client = RestHelper.getInstance().getApiClient();
         super.onViewAttached(view);
 
         if (preferencesRepository.isFirstRun()) {

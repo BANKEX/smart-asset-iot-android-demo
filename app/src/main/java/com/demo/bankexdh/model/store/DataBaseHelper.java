@@ -125,4 +125,9 @@ public class DataBaseHelper {
             realm.executeTransaction(t -> realm.delete(DeviceModel.class));
         }
     }
+    public void clearUser() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransaction(t -> realm.delete(UserModel.class));
+        }
+    }
 }

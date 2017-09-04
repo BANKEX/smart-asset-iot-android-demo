@@ -230,7 +230,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         clearLocationNotificationData();
     }
 
-
+    public void logout() {
+        dbHelper.clearDevice();
+        dbHelper.clearUser();
+    }
 }
 
 

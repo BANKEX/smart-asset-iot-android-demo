@@ -370,4 +370,9 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         snackbar.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        presenter.logout();
+        super.onBackPressed();
+    }
 }

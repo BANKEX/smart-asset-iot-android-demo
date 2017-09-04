@@ -192,7 +192,6 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     public void onRegistered() {
         showLoading(false);
         startActivity(new Intent(this, MainActivity.class));
-        finish();
     }
 
     @Override
