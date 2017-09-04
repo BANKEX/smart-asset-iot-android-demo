@@ -158,14 +158,13 @@
         android:id="@+id/progress_bar_view"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="16dp"
+        android:layout_height="4dp"
         android:indeterminate="true"
         android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:mpb_progressStyle="horizontal"
         app:mpb_useIntrinsicPadding="false"
-        tools:visibility="visible"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:visibility="visible"  />
 
 </android.support.constraint.ConstraintLayout>
