@@ -25,4 +25,7 @@
         <item name="android:background">@drawable/oval_button_with_text</item>
     </style>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

@@ -17,8 +17,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,16 +69,25 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     View photoButton;
     @BindView(R.id.progress_bar_view)
     View progressBar;
-
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private static final int TAKE_PHOTO = 2;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         prepareAnimation();
