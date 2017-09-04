@@ -16,15 +16,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextAppearance="@style/Toolbar.TitleText"
-           />
+            app:titleTextAppearance="@style/Toolbar.TitleText" />
     </android.support.design.widget.AppBarLayout>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/progress_bar_view"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
         android:layout_below="@+id/actionBar"
         android:indeterminate="true"
         android:visibility="invisible"
@@ -58,8 +57,7 @@
             android:text="@string/description"
             android:textAppearance="@style/LabelTextAppearance"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/progress_bar_view" />
+            app:layout_constraintRight_toRightOf="parent" />
 
 
         <com.airbnb.lottie.LottieAnimationView
