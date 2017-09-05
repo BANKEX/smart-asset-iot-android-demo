@@ -27,6 +27,7 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
     private static final String ASSET_ID_QUERY_PARAMETER = "id";
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
+    public static final String LINK_PARAM = "link";
     private final PreferencesRepository preferencesRepository;
     private ApiClient client;
 
@@ -127,7 +128,7 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
 
     private String parseAssetId(String contents) {
         try {
-            return Uri.parse(contents).getQueryParameter(ASSET_ID_QUERY_PARAMETER);
+            return Uri.parse(Uri.parse(contents).getQueryParameter(LINK_PARAM)).getQueryParameter(ASSET_ID_QUERY_PARAMETER);
         } catch (Exception e) {
             Timber.e(e, "Failed to parse scanned content: %s", contents);
         }

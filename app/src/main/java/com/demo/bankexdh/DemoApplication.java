@@ -24,6 +24,7 @@ public class DemoApplication extends android.app.Application {
         }
 
         RealmContract.configureRealm(this);
+//        FirebaseApp.initializeApp(this);
 
     }
 }

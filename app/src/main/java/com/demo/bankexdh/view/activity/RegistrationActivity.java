@@ -2,6 +2,7 @@ package com.demo.bankexdh.view.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -23,6 +25,7 @@ import com.demo.bankexdh.presenter.base.RegistrationView;
 import com.demo.bankexdh.presenter.impl.RegistrationPresenter;
 import com.demo.bankexdh.utils.ClientUtils;
 import com.demo.bankexdh.utils.UIUtils;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -181,6 +184,18 @@ public class RegistrationActivity extends BasePresenterActivity<RegistrationPres
     protected void onResume() {
         super.onResume();
         showLoading(DataBaseHelper.getInstance().isDeviceRegistered() && presenter.isRegistration());
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, pendingDynamicLinkData -> {
+                    Uri deepLink = null;
+                    if (pendingDynamicLinkData != null) {
+                        deepLink = pendingDynamicLinkData.getLink();
+                    }
+                    if (deepLink != null) {
+                        presenter.onScanCompleted(deepLink.toString());
+                    }
+                })
+                .addOnFailureListener(this, e -> Log.w("TAG", "getDynamicLink:onFailure", e));
     }
 
     @Override

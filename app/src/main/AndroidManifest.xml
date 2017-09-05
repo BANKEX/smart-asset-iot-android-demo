@@ -23,9 +23,9 @@
             android:name=".view.activity.MainActivity"
             android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
         <activity
@@ -35,6 +35,23 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="bankex.org"
+                    android:scheme="http" />
+                <data
+                    android:host="bankex.org"
+                    android:scheme="https" />
+                <data
+                    android:host="bankex"
+                    android:scheme="http" />
+                <data
+                    android:host="bankex"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

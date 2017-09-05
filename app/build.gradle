@@ -12,6 +12,7 @@ android {
         versionCode 14
         versionName "1.0.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -72,7 +73,8 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${retrofit2}"
 
     //Location service
-    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-location:11.2.0'
+    compile 'com.google.firebase:firebase-invites:11.2.0'
 
     //Animation
     compile 'com.airbnb.android:lottie:2.1.0'
@@ -103,5 +105,7 @@ dependencies {
 
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
 
+
     testCompile 'junit:junit:4.12'
 }
+apply plugin: 'com.google.gms.google-services'
