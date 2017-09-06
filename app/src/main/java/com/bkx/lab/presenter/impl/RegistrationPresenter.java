@@ -131,11 +131,8 @@ public class RegistrationPresenter extends AbstractPresenter<RegistrationView> {
             return Uri.parse(Uri.parse(contents)
                     .getQueryParameter(LINK_PARAM))
                     .getQueryParameter(ASSET_ID_QUERY_PARAMETER);
-
         } catch (Exception e) {
             Timber.e(e, "Failed to parse scanned content: %s", contents);
-
-
         }
         return parseAssetIdOldFormat(contents);
     }
