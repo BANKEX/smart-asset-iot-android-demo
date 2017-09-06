@@ -32,7 +32,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="asset_id_empty">Asset Id cannot be empty</string>
     <string name="about_info_header">To use the application create a blockchain-based Smart Asset following the steps here</string>
-    <string name="about_info_link">https://bkx.com/metamask</string>
+    <string name="about_info_link">https://bankex.com/metamask</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
     <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
 </resources>
