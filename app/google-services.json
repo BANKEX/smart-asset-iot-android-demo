@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "165316733722",
-    "firebase_url": "https://bankex-44dc1.firebaseio.com",
-    "project_id": "bankex-44dc1",
-    "storage_bucket": "bankex-44dc1.appspot.com"
+    "project_number": "495248218957",
+    "firebase_url": "https://bkx-lab.firebaseio.com",
+    "project_id": "bkx-lab",
+    "storage_bucket": "bkx-lab.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:165316733722:android:0f2c872e09e3c55b",
+        "mobilesdk_app_id": "1:495248218957:android:ff9e2f9476c4127e",
         "android_client_info": {
-          "package_name": "com.demo.bankexdh"
+          "package_name": "com.bkx.lab"
         }
       },
       "oauth_client": [
         {
-          "client_id": "165316733722-71q9nbcavnhciepurf1sg7j8646a8l5j.apps.googleusercontent.com",
+          "client_id": "495248218957-m48lsep9duak2hj2bkftkcknhmm77498.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA57RK9fLfBQ5ZMI0opT23vihVECNCs43c"
+          "current_key": "AIzaSyCBQ1odRzWAK_88LKC5K06UrmfB9pTeD4w"
         }
       ],
       "services": {

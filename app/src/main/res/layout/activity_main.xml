@@ -38,7 +38,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/progress_bar_view"
         android:animateLayoutChanges="true"
-        tools:context="com.demo.bankexdh.view.activity.MainActivity">
+        tools:context="com.bkx.lab.view.activity.MainActivity">
 
         <TextView
             android:id="@+id/description"

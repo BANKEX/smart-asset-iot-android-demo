@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">BankEx Blockchain Sensor</string>
-    <string name="description">\tThis is a Demo Application to emulate IoT Sensor signals for integration into a Smart Asset generated on the blockchain with the BankEx Proof-of-Asset Protocol.</string>
+    <string name="app_name">BKX Lab IoT emulator</string>
+    <string name="description">\tThis is a Demo Application to emulate IoT Sensor signals for integration into a Smart Asset generated on the blockchain with the BKX Proof-of-Asset Protocol.</string>
     <string name="permission_dialog_title">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
@@ -13,7 +13,7 @@
     <string name="activity_about_label">About</string>
     <string name="about_info">On the stage of Smart Asset validation:\n\n1) Launch application;\n\n2) Scan the QR code of the Asset that needs to be validated;\n\n3) On the main page of the application, press the “Shake” button or simply shake your phone to generate a motion sensor signal;\n\n4) On the main page of the application press the “Photo” button to generate a geolocation sensor signal and photo-verification;\n\n5) Check for validation confirmation on the Smart Asset page.</string>
 
-    <string name="intro_first_slide_title">BankEx Blockchain Sensor</string>
+    <string name="intro_first_slide_title">BKX Lab IoT emulator</string>
     <string name="intro_first_slide_description">To use the application create a blockchain-based Smart Asset following the steps here</string>
     <string name="intro_second_slide_title">On the stage of Smart Asset validation:</string>
     <string name="intro_second_slide_description">1) Launch application;\n\n2) Scan the QR code of the Asset that needs to be validated;\n\n3) On the main page of the application, press the “Shake” button or simply shake your phone to generate a motion sensor signal;\n\n4) On the main page of the application press the “Photo” button to generate a geolocation sensor signal and photo-verification;\n\n5) Check for validation confirmation on the Smart Asset page.</string>
@@ -32,7 +32,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="asset_id_empty">Asset Id cannot be empty</string>
     <string name="about_info_header">To use the application create a blockchain-based Smart Asset following the steps here</string>
-    <string name="about_info_link">https://bankex.com/metamask</string>
+    <string name="about_info_link">https://bkx.com/metamask</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
     <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
 </resources>
