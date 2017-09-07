@@ -37,4 +37,6 @@
     <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
     <string name="submit">submit</string>
     <string name="scan_qr_code">Scan QR Code</string>
+    <string name="send_shake">Send Shake</string>
+    <string name="send_photo_and_location">Send Photo and Location</string>
 </resources>

@@ -7,4 +7,7 @@
     <dimen name="margin_four">4dp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="buttonContainerMaxHeight">54dp</dimen>
+    <dimen name="event_image_size">32dp</dimen>
+    <dimen name="toolbar_logo_height">32dp</dimen>
+    <dimen name="description_margin">32dp</dimen>
 </resources>

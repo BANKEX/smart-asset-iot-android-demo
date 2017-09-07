@@ -116,7 +116,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_redesign);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
         assetIdEdit.addTextChangedListener(watcher);
