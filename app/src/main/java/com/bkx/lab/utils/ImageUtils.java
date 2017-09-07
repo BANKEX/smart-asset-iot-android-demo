@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bkx.lab.model.store.ImageData;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
@@ -25,14 +26,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.realm.Realm;
 import timber.log.Timber;
 
 public class ImageUtils {
 
     public static final String FILEDATA = "filedata";
     public static final String IMAGE_TYPE = "image/*";
-    private String currentPhotoPath;
-    private String absolutImagePath;
+//    private String currentPhotoPath;
+//    private String absolutImagePath;
     private static final int FILE_SIZE_UNITS = 1024;
     private static final int MAX_FILE_SIZE = 9;
 
@@ -45,7 +47,7 @@ public class ImageUtils {
     }
 
     public String getCurrentPhotoPath() {
-        return currentPhotoPath;
+        return getCurrentImagePath();
     }
 
     public File createImageFile(Context context) throws IOException {
@@ -59,14 +61,47 @@ public class ImageUtils {
         }
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         // Save a file: path for use with ACTION_VIEW intents
-        absolutImagePath = image.getAbsolutePath();
-        currentPhotoPath = "file:" + absolutImagePath;
+        insertPath(image.getAbsolutePath());
         return image;
     }
 
+    private void insertPath(String absoluteImagePath) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransaction(t -> {
+                ImageData data = new ImageData();
+                data.setId(ImageData.DEFAULT_ID);
+                data.setAbsolutePath(absoluteImagePath);
+                data.setCurrentPath("file:" + absoluteImagePath);
+                t.copyToRealmOrUpdate(data);
+            });
+        }
+    }
+
+    private String getAbsoluteImagePath() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            ImageData data = realm.where(ImageData.class).equalTo(ImageData.ID, ImageData.DEFAULT_ID).findFirst();
+            if (data == null) {
+                return null;
+            } else {
+                return data.getAbsolutePath();
+            }
+        }
+    }
+
+    private String getCurrentImagePath() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            ImageData data = realm.where(ImageData.class).equalTo(ImageData.ID, ImageData.DEFAULT_ID).findFirst();
+            if (data == null) {
+                return null;
+            } else {
+                return data.getCurrentPath();
+            }
+        }
+    }
+
     public boolean renameFile(Context context) throws IOException, NoSuchAlgorithmException {
-        File file = new File(absolutImagePath);
-        String newName = getName(absolutImagePath);
+        File file = new File(getAbsoluteImagePath());
+        String newName = getName(getAbsoluteImagePath());
 
         File storageDir = new File(context.getExternalCacheDir() + "/photos");
         if (!storageDir.exists()) {
@@ -75,15 +110,14 @@ public class ImageUtils {
         }
         File newFile = new File(storageDir.getAbsolutePath() + "/" + newName);
         boolean isRenamed = file.renameTo(newFile);
-        absolutImagePath = newFile.getAbsolutePath();
-        currentPhotoPath = "file:" + absolutImagePath;
+        insertPath(newFile.getAbsolutePath());
         return isRenamed;
     }
 
     public void setOrientation(Context context, Uri uri) throws IOException, NoSuchAlgorithmException {
         File file = prepareFile(context, uri);
         if (file != null) {
-            absolutImagePath = file.getAbsolutePath();
+            insertPath(file.getAbsolutePath());
             setOrientation();
         }
     }
@@ -113,13 +147,13 @@ public class ImageUtils {
     //Due to Samsung mobile specific issue with Photo Rotation we need to get Exif data, check orientation
     // and change it if needed
     public void setOrientation() throws IOException {
-        if (TextUtils.isEmpty(absolutImagePath)) {
+        if (TextUtils.isEmpty(getAbsoluteImagePath())) {
             return;
         }
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(absolutImagePath, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(getAbsoluteImagePath(), bmOptions);
 
-        ExifInterface ei = new ExifInterface(absolutImagePath);
+        ExifInterface ei = new ExifInterface(getAbsoluteImagePath());
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED);
 
@@ -179,7 +213,7 @@ public class ImageUtils {
 
     private void writeFile(Bitmap bitmap) {
         try {
-            File file = new File(absolutImagePath);
+            File file = new File(getAbsoluteImagePath());
             FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
@@ -301,7 +335,7 @@ public class ImageUtils {
         File image = createImageFile(context);
 
         try {
-            out = new FileOutputStream(absolutImagePath);
+            out = new FileOutputStream(getAbsoluteImagePath());
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
         } catch (FileNotFoundException e) {
