@@ -185,8 +185,8 @@
                         <ProgressBar
                             android:id="@+id/shakeProgressBar"
                             style="@style/Base.Widget.AppCompat.ProgressBar"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/card_progress_bar_size"
+                            android:layout_height="@dimen/card_progress_bar_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:indeterminate="true"
@@ -259,8 +259,8 @@
                         <ProgressBar
                             android:id="@+id/photoProgressBar"
                             style="@style/Base.Widget.AppCompat.ProgressBar"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/card_progress_bar_size"
+                            android:layout_height="@dimen/card_progress_bar_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:indeterminate="true"
@@ -272,9 +272,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin"
-                        android:text="@string/send_shake_description"
+                        android:text="@string/send_photo_description"
                         android:textColor="@color/textColorBlue"
                         android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:id="@+id/coordinates"
+                        tools:text="Lat: 60.169856   Long: 24.938379"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content" />
 
                     <Button
                         android:id="@+id/photo_button"

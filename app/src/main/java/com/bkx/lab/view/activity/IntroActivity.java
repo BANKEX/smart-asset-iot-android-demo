@@ -3,28 +3,19 @@ package com.bkx.lab.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 import com.bkx.lab.R;
-import com.bkx.lab.view.fragment.IntroSlideFragment;
-import com.bkx.lab.view.fragment.IntroSlideFragmentLink;
-import com.github.paolorotolo.appintro.AppIntro;
 
-import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class IntroActivity extends AppIntro {
-
-    @BindString(R.string.intro_first_slide_title)
-    String firstTitle;
-    @BindString(R.string.intro_first_slide_description)
-    String firstDescription;
-    @BindString(R.string.intro_second_slide_title)
-    String secondTitle;
-    @BindString(R.string.intro_second_slide_description)
-    String secondDescription;
-
+public class IntroActivity extends AppCompatActivity {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, IntroActivity.class);
@@ -32,30 +23,27 @@ public class IntroActivity extends AppIntro {
     }
 
 
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
 
-        addSlide(IntroSlideFragmentLink.newInstance());
-        addSlide(IntroSlideFragment.newInstance(secondTitle, secondDescription));
-        setSkipText(getString(R.string.skip));
-        setDoneText(getString(R.string.done));
-        setFadeAnimation();
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        title.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    @Override
-    public void onDonePressed(Fragment currentFragment) {
-        super.onDonePressed(currentFragment);
-
+    @OnClick(R.id.close)
+    void close() {
         finish();
     }
 
-    @Override
-    public void onSkipPressed(Fragment currentFragment) {
-        super.onSkipPressed(currentFragment);
-
-        finish();
-    }
 }

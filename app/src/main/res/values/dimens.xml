@@ -10,4 +10,5 @@
     <dimen name="event_image_size">32dp</dimen>
     <dimen name="toolbar_logo_height">32dp</dimen>
     <dimen name="description_margin">32dp</dimen>
+    <dimen name="card_progress_bar_size">32dp</dimen>
 </resources>

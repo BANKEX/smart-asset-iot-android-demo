@@ -187,6 +187,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         this.location = location;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
     private void sendLocationNotification(Location location, String link) {
         if (location != null && !TextUtils.isEmpty(link)) {
 
@@ -240,6 +244,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         link = null;
         location = null;
     }
+
     public boolean isRegistration() {
         return isRegistrationInProgress.get();
     }
@@ -343,6 +348,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         }
         return null;
     }
+
     @Override
     protected void onDestroyed() {
         clearLocationNotificationData();

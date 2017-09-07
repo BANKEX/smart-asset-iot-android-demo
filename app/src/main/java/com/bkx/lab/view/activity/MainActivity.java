@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bkx.lab.BuildConfig;
@@ -87,6 +89,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     View submit;
     @BindView(R.id.scanCode)
     View scanButton;
+    @BindView(R.id.coordinates)
+    TextView coordinates;
 
     private boolean scannedContentReceived;
     private String scannedContent;
@@ -197,11 +201,20 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
+        Snackbar snackbar = Snackbar.make(buttonContainer, "Shake sent", Snackbar.LENGTH_SHORT);
+        snackbar.show();
         vibrate(500);
     }
 
     @Override
     public void onLocationNotificationSent() {
+        Snackbar snackbar = Snackbar.make(buttonContainer, "Photo and Location sent", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        Location location=presenter.getLocation();
+        coordinates.setVisibility(View.VISIBLE);
+        coordinates.setText(String.format(getString(R.string.location_format),
+                location.getLatitude(),
+                location.getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
         vibrate(500);
 
@@ -209,6 +222,9 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onError() {
+        Snackbar snackbar = Snackbar.make(buttonContainer, "Something went wrong", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        coordinates.setVisibility(View.GONE);
         progressBar.setVisibility(View.INVISIBLE);
         photoProgressBar.setVisibility(View.INVISIBLE);
         shakeProgressBar.setVisibility(View.INVISIBLE);
@@ -227,6 +243,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @OnClick(R.id.photo_button)
     void takeAPhotoCheck() {
+        coordinates.setVisibility(View.GONE);
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
 
@@ -247,6 +264,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         UIUtils.hideKeyboard(this);
         if (!ClientUtils.isNetworkConnected(this)) {
             UIUtils.showInternetConnectionAlertDialog(this);
+            photoProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
         String value = assetIdEdit.getText().toString();
@@ -258,8 +276,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (presenter.validate(value)) {
             presenter.register(value);
         } else {
-            Snackbar snackbar = Snackbar.make(buttonContainer, R.string.error_incorrect_asset_id, Snackbar.LENGTH_SHORT);
-            snackbar.show();
+            assetIdEditContainer.setError(getString(R.string.error_get_asset_id));
         }
 
     }
@@ -273,7 +290,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             snackbar.setAction(getString(android.R.string.ok),
                     v -> snackbar.dismiss());
             snackbar.show();
-            onError();
             return;
         }
         getLastLocation();
