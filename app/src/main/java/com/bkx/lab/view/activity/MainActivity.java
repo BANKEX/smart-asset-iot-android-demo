@@ -244,6 +244,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @OnClick(R.id.submit)
     void submit() {
+        UIUtils.hideKeyboard(this);
         if (!ClientUtils.isNetworkConnected(this)) {
             UIUtils.showInternetConnectionAlertDialog(this);
             return;
