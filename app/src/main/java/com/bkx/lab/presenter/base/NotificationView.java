@@ -1,6 +1,6 @@
 package com.bkx.lab.presenter.base;
 
-public interface NotificationView extends MvpView {
+public interface NotificationView extends MvpView, RegistrationView {
     void onShakeNotificationSent();
 
     void onLocationNotificationSent();

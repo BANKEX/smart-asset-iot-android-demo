@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">BKX Lab IoT emulator</string>
-    <string name="description">\tThis is a Demo Application to emulate IoT Sensor signals for integration into a Smart Asset generated on the blockchain with the BKX Proof-of-Asset Protocol.</string>
+    <string name="description">This is a Demo Application\nto emulate IoT Sensor signals for integration\ninto a Smart Asset generated on the blockchain\nwith the BKX Proof-of-Asset Protocol.</string>
     <string name="permission_dialog_title">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
@@ -18,14 +18,14 @@
     <string name="intro_second_slide_title">On the stage of Smart Asset validation:</string>
     <string name="intro_second_slide_description">1) Launch application;\n\n2) Scan the QR code of the Asset that needs to be validated;\n\n3) On the main page of the application, press the “Shake” button or simply shake your phone to generate a motion sensor signal;\n\n4) On the main page of the application press the “Photo” button to generate a geolocation sensor signal and photo-verification;\n\n5) Check for validation confirmation on the Smart Asset page.</string>
 
-    <string name="button_shake_label">Send\n Shake</string>
-    <string name="button_photo_label">Send\n Photo</string>
+    <string name="button_shake_label">Send Shake</string>
+    <string name="button_photo_label">Send Photo</string>
     <string name="send_hint_label">Check for validation confirmation\n on the Smart Asset page</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
 
     <string name="register_label">Register</string>
-    <string name="asset_id_hint">Asset ID</string>
+    <string name="asset_id_hint">Enter Asset ID</string>
     <string name="error_get_asset_id">Failed to get asset id from the barcode</string>
     <string name="scan_barcode_prompt">Place a barcode inside the viewfinder rectangle to scan it.</string>
     <string name="error_incorrect_asset_id">Incorrect asset id</string>
@@ -35,4 +35,6 @@
     <string name="about_info_link">https://bankex.com/metamask</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
     <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
+    <string name="submit">submit</string>
+    <string name="scan_qr_code">Scan QR Code</string>
 </resources>

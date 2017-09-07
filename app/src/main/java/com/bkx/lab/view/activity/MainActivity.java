@@ -1,7 +1,6 @@
 package com.bkx.lab.view.activity;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,16 +15,26 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.bkx.lab.BuildConfig;
+import com.bkx.lab.R;
+import com.bkx.lab.model.prefs.PreferencesRepository;
+import com.bkx.lab.model.store.DataBaseHelper;
 import com.bkx.lab.presenter.base.BasePresenterActivity;
 import com.bkx.lab.presenter.base.NotificationView;
 import com.bkx.lab.presenter.base.PresenterFactory;
@@ -34,8 +43,9 @@ import com.bkx.lab.utils.ClientUtils;
 import com.bkx.lab.utils.ShakeDetector;
 import com.bkx.lab.utils.UIUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.bkx.lab.BuildConfig;
-import com.bkx.lab.R;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,40 +67,63 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private ShakeDetector sd;
     @BindView(R.id.buttonContainer)
     View buttonContainer;
-    @BindView(R.id.animationAccelerometer)
-    LottieAnimationView animationAccelerometer;
-    @BindView(R.id.animationError)
-    LottieAnimationView animationError;
-    @BindView(R.id.animationLocation)
-    LottieAnimationView animationLocation;
     @BindView(R.id.shake_button)
     View shakeButton;
     @BindView(R.id.photo_button)
     View photoButton;
-    @BindView(R.id.progress_bar_view)
-    View progressBar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.asset_id_edit_container)
+    TextInputLayout assetIdEditContainer;
+    @BindView(R.id.asset_id_edit)
+    EditText assetIdEdit;
+    @BindView(R.id.progress_bar_view)
+    ProgressBar progressBar;
+    @BindView(R.id.photoProgressBar)
+    ProgressBar photoProgressBar;
+    @BindView(R.id.shakeProgressBar)
+    ProgressBar shakeProgressBar;
+    @BindView(R.id.submit)
+    View submit;
+    @BindView(R.id.scanCode)
+    View scanButton;
+
+    private boolean scannedContentReceived;
+    private String scannedContent;
+
     private static final int TAKE_PHOTO = 2;
 
+    TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            assetIdEditContainer.setError(null);
+            assetIdEditContainer.setErrorEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            assetIdEditContainer.setError(null);
+            assetIdEditContainer.setErrorEnabled(false);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.NoActionBar);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_redesign);
 
         ButterKnife.bind(this);
-
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        assetIdEdit.addTextChangedListener(watcher);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        prepareAnimation();
     }
 
     @Override
@@ -109,79 +142,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         return super.onOptionsItemSelected(item);
     }
 
-    void prepareAnimation() {
-        animationError.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-                animationError.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationError.setVisibility(View.GONE);
-            }
-        });
-        animationLocation.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationError.setVisibility(View.GONE);
-                animationAccelerometer.setVisibility(View.GONE);
-                animationLocation.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-        });
-        animationAccelerometer.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationError.setVisibility(View.GONE);
-                animationAccelerometer.setVisibility(View.GONE);
-                animationAccelerometer.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationAccelerometer.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationAccelerometer.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationAccelerometer.setVisibility(View.GONE);
-            }
-        });
-        animationError.setVisibility(View.GONE);
-        animationAccelerometer.setVisibility(View.GONE);
-        animationLocation.setVisibility(View.GONE);
-    }
 
     @Override
     protected void onResume() {
@@ -189,6 +149,19 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (sd != null) {
             sd.start(mSensorManager);
         }
+        showLoading(DataBaseHelper.getInstance().isDeviceRegistered() && presenter.isRegistration());
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, pendingDynamicLinkData -> {
+                    Uri deepLink = null;
+                    if (pendingDynamicLinkData != null) {
+                        deepLink = pendingDynamicLinkData.getLink();
+                    }
+                    if (deepLink != null) {
+                        presenter.onScanCompleted(deepLink.toString());
+                    }
+                })
+                .addOnFailureListener(this, e -> Log.w("TAG", "getDynamicLink:onFailure", e));
     }
 
     @Override
@@ -207,7 +180,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @NonNull
     @Override
     protected PresenterFactory<MainPresenter> getPresenterFactory() {
-        return MainPresenter::new;
+        return () -> new MainPresenter(new PreferencesRepository(MainActivity.this));
     }
 
     @Override
@@ -224,29 +197,27 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-        animationAccelerometer.cancelAnimation();
-        playAnimation(animationAccelerometer);
+        vibrate(500);
     }
 
     @Override
     public void onLocationNotificationSent() {
-        progressBar.setVisibility(View.INVISIBLE);
-        animationLocation.cancelAnimation();
-        playAnimation(animationLocation);
+        photoProgressBar.setVisibility(View.INVISIBLE);
+        vibrate(500);
 
     }
 
     @Override
     public void onError() {
         progressBar.setVisibility(View.INVISIBLE);
-        animationError.cancelAnimation();
-        playAnimation(animationError);
+        photoProgressBar.setVisibility(View.INVISIBLE);
+        shakeProgressBar.setVisibility(View.INVISIBLE);
+        vibrate(500);
     }
 
     @Override
     public void onUnregistered() {
-        startActivity(new Intent(this, RegistrationActivity.class));
-        finish();
+
     }
 
     private void playAnimation(LottieAnimationView animationView) {
@@ -258,6 +229,40 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     void takeAPhotoCheck() {
         MainActivityPermissionsDispatcher.takeAPhotoWithCheck(MainActivity.this);
     }
+
+    @OnClick(R.id.scanCode)
+    void initiateScan() {
+        MainActivityPermissionsDispatcher.startScanWithCheck(this);
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    public void startScan() {
+        new IntentIntegrator(this)
+                .setPrompt(getString(R.string.scan_barcode_prompt))
+                .initiateScan();
+    }
+
+    @OnClick(R.id.submit)
+    void submit() {
+        if (!ClientUtils.isNetworkConnected(this)) {
+            UIUtils.showInternetConnectionAlertDialog(this);
+            return;
+        }
+        String value = assetIdEdit.getText().toString();
+        if (TextUtils.isEmpty(value)) {
+            assetIdEditContainer.setErrorEnabled(true);
+            assetIdEditContainer.setError(getString(R.string.asset_id_empty));
+            return;
+        }
+        if (presenter.validate(value)) {
+            presenter.register(value);
+        } else {
+            Snackbar snackbar = Snackbar.make(buttonContainer, R.string.error_incorrect_asset_id, Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+
+    }
+
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void takeAPhoto() {
@@ -322,13 +327,21 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     UIUtils.showInternetConnectionAlertDialog(this);
                     return;
                 }
-                progressBar.setVisibility(View.VISIBLE);
+                photoProgressBar.setVisibility(View.VISIBLE);
                 presenter.uploadFile(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 onPhotoUploadFail("");
             }
             return;
+        } else {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+            if (result != null) {
+                scannedContentReceived = true;
+                scannedContent = result.getContents();
+                return;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -360,6 +373,71 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (DataBaseHelper.getInstance().isDeviceRegistered()) {
+            showAssetId(presenter.getDeviceId());
+            assetIdEdit.clearFocus();
+        }
+        if (!scannedContentReceived) {
+            return;
+        }
+        scannedContentReceived = false;
+
+        if (scannedContent != null) {
+            presenter.onScanCompleted(scannedContent);
+        } else {
+            presenter.onScanCancelled();
+        }
+        scannedContent = null;
+    }
+
+    @Override
+    public void showIntro() {
+        IntroActivity.start(this);
+    }
+
+    @Override
+    public void onRegistered() {
+        showLoading(false);
+    }
+
+    @Override
+    public void onRegistrationError() {
+        showLoading(false);
+        Snackbar.make(buttonContainer, R.string.something_went_wrong, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
+    @Override
+    public void showAssetId(String assetId) {
+        assetIdEdit.setText(assetId);
+        assetIdEdit.setSelection(assetId.length());
+    }
+
+    @Override
+    public void showGetAssetIdError() {
+        Snackbar.make(buttonContainer, R.string.error_get_asset_id, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
+    void showLoading(boolean show) {
+        enableViews(!show);
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    void enableViews(boolean enable) {
+        assetIdEdit.setEnabled(enable);
+        submit.setEnabled(enable);
+        scanButton.setEnabled(enable);
+    }
+
     private void vibrate(long millis) {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -379,11 +457,5 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 v -> snackbar.dismiss());
 
         snackbar.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        presenter.logout();
-        super.onBackPressed();
     }
 }
