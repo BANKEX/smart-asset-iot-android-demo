@@ -28,8 +28,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -91,6 +94,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     View scanButton;
     @BindView(R.id.coordinates)
     TextView coordinates;
+    @BindView(R.id.shakeLayout)
+    LinearLayout shakeLayout;
+    @BindView(R.id.shakeTitleLayout)
+    RelativeLayout shakeTitleLayout;
+    @BindView(R.id.photoLayout)
+    LinearLayout photoLayout;
+    @BindView(R.id.photoTitleLayout)
+    RelativeLayout photoTitleLayout;
 
     private boolean scannedContentReceived;
     private String scannedContent;
@@ -210,7 +221,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     public void onLocationNotificationSent() {
         Snackbar snackbar = Snackbar.make(buttonContainer, "Photo and Location sent", Snackbar.LENGTH_SHORT);
         snackbar.show();
-        Location location=presenter.getLocation();
+        Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
                 location.getLatitude(),
@@ -397,6 +408,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (DataBaseHelper.getInstance().isDeviceRegistered()) {
             showAssetId(presenter.getDeviceId());
             assetIdEdit.clearFocus();
+        } else {
+            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
         }
         if (!scannedContentReceived) {
             return;
@@ -419,6 +432,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     public void onRegistered() {
         showLoading(false);
+        enableAllViews(true, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
     @Override
@@ -474,5 +488,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 v -> snackbar.dismiss());
 
         snackbar.show();
+    }
+
+    private void enableAllViews(boolean enable, ViewGroup... viewGroups) {
+        for (ViewGroup viewGroup : viewGroups) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                child.setEnabled(enable);
+            }
+        }
     }
 }

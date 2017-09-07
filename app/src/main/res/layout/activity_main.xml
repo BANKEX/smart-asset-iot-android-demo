@@ -102,7 +102,6 @@
                         android:layout_weight="2"
                         android:text="@string/submit"
                         android:textAllCaps="true"
-                        android:textColor="@color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -150,12 +149,14 @@
                 app:cardCornerRadius="16dp">
 
                 <LinearLayout
+                    android:id="@+id/shakeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/padding">
 
                     <RelativeLayout
+                        android:id="@+id/shakeTitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -179,7 +180,7 @@
                             android:layout_toEndOf="@+id/imageShake"
                             android:gravity="center|start"
                             android:text="@string/send_shake"
-                            android:textColor="@color/textColorBlue"
+                            android:textColor="@color/text_selector"
                             android:textSize="16sp" />
 
                         <ProgressBar
@@ -199,7 +200,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin"
                         android:text="@string/send_shake_description"
-                        android:textColor="@color/textColorBlue"
+                        android:textColor="@color/text_selector"
                         android:textSize="16sp" />
 
 
@@ -210,7 +211,6 @@
                         android:layout_height="40dp"
                         android:text="@string/button_shake_label"
                         android:textAllCaps="true"
-                        android:textColor="@color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -223,12 +223,14 @@
                 app:cardCornerRadius="16dp">
 
                 <LinearLayout
+                    android:id="@+id/photoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/padding">
 
                     <RelativeLayout
+                        android:id="@+id/photoTitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -252,7 +254,7 @@
                             android:layout_toEndOf="@+id/imagePhoto"
                             android:gravity="center|start"
                             android:text="@string/send_photo_and_location"
-                            android:textColor="@color/textColorBlue"
+                            android:textColor="@color/text_selector"
                             android:textSize="16sp" />
 
 
@@ -273,7 +275,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin"
                         android:text="@string/send_photo_description"
-                        android:textColor="@color/textColorBlue"
+                        android:textColor="@color/text_selector"
                         android:textSize="16sp" />
                     <TextView
                         android:layout_width="match_parent"
@@ -290,7 +292,6 @@
                         android:layout_height="40dp"
                         android:text="@string/button_photo_label"
                         android:textAllCaps="true"
-                        android:textColor="@color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>

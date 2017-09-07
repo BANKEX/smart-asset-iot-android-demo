@@ -6,6 +6,7 @@
     <color name="colorAccentTransparent">#60607D8B</color>
 
     <color name="gray">#808080</color>
+    <color name="silver">#C0C0C0</color>
     <color name="textColorBlue">#2c3e57</color>
     <color name="colorProgress">#03A9F4</color>
     <color name="primaryText">#212121</color>
