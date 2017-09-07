@@ -14,14 +14,16 @@
     </style>
 
     <style name="LabelTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textColor">@color/textColorBlue</item>
         <item name="android:textSize">@dimen/text_size</item>
     </style>
 
     <style name="OvalButton">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:minWidth">128dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:background">@drawable/oval_button_with_text</item>
     </style>
 

@@ -14,14 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/base"
-            app:titleTextAppearance="@style/Toolbar.TitleText">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/information"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </android.support.v7.widget.Toolbar>
+            app:titleTextAppearance="@style/Toolbar.TitleText" />
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -39,18 +32,24 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding"
                 android:text="@string/about_info_header"
-                android:textAppearance="@style/LabelTextAppearance" />
+                android:textAppearance="@style/LabelTextAppearance"
+                android:paddingBottom="@dimen/padding"/>
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin"
                 android:text="@string/about_info"
-                android:textAppearance="@style/LabelTextAppearance" />
+                android:textAppearance="@style/LabelTextAppearance"
+                android:layout_marginBottom="@dimen/margin"/>
 
+            <Button
+                android:id="@+id/close"
+                style="@style/OvalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/close" />
         </LinearLayout>
     </ScrollView>
 

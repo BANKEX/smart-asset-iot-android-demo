@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
-import com.bkx.lab.utils.UIUtils;
 import com.bkx.lab.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -21,6 +21,8 @@ public class AboutActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    @BindView(R.id.title)
+    TextView title;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -33,14 +35,12 @@ public class AboutActivity extends AppCompatActivity {
 
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_return);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        title.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    @OnClick(R.id.link)
-    void open(){
-        UIUtils.openInBrowser(this,R.string.about_info_link);
-    }
 }
