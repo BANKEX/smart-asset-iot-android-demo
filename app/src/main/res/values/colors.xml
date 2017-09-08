@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorAccent">#2196F3</color>
+    <color name="colorPrimary">#1174c8</color>
+    <color name="colorPrimaryDark">#2c3e57</color>
+    <color name="colorAccent">#3b70b7</color>
+    <color name="colorAccentTransparent">#60607D8B</color>
+
+    <color name="gray">#808080</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="textColorBlue">#2c3e57</color>
+    <color name="colorProgress">#03A9F4</color>
     <color name="primaryText">#212121</color>
+    <color name="introSlideBackground">#84AABC</color>
+    <color name="linkColor">#0645AD</color>
 </resources>
+

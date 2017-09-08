@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="half_margin">8dp</dimen>
+    <dimen name="margin">16dp</dimen>
     <dimen name="padding">16dp</dimen>
+    <dimen name="half_padding">8dp</dimen>
     <dimen name="margin_four">4dp</dimen>
     <dimen name="text_size">16sp</dimen>
+    <dimen name="buttonContainerMaxHeight">54dp</dimen>
+    <dimen name="event_image_size">32dp</dimen>
+    <dimen name="toolbar_logo_height">32dp</dimen>
+    <dimen name="description_margin">32dp</dimen>
+    <dimen name="card_progress_bar_size">32dp</dimen>
+    <dimen name="animation_size">32dp</dimen>
+    <dimen name="text_16sp">16sp</dimen>
+    <dimen name="cardview_radius">4dp</dimen>
+    <dimen name="button_height_size">40dp</dimen>
 </resources>

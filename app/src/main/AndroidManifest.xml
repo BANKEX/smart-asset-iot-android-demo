@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.demo.bankexdh">
+    package="com.bkx.lab">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 
     <application
@@ -16,16 +15,75 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activity.MainActivity">
+
+        <activity
+            android:name=".view.activity.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="bkx.com"
+                    android:scheme="http" />
+                <data
+                    android:host="bkx.com"
+                    android:scheme="https" />
+                <data
+                    android:host="bkx.org"
+                    android:scheme="http" />
+                <data
+                    android:host="bkx.org"
+                    android:scheme="https" />
+                <data
+                    android:host="bkx"
+                    android:scheme="http" />
+                <data
+                    android:host="bkx"
+                    android:scheme="https" />
+                <data
+                    android:host="bankex.com"
+                    android:scheme="http" />
+                <data
+                    android:host="bankex.com"
+                    android:scheme="https" />
+                <data
+                    android:host="bankex.org"
+                    android:scheme="http" />
+                <data
+                    android:host="bankex.org"
+                    android:scheme="https" />
+                <data
+                    android:host="bankex"
+                    android:scheme="http" />
+                <data
+                    android:host="bankex"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.activity.AboutActivity"
+            android:label="@string/activity_about_label"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.activity.IntroActivity"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -35,6 +93,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>
