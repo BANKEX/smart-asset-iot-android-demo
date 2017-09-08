@@ -327,6 +327,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
         if (presenter.validate(value)) {
             presenter.register(value);
+            showLoading(true);
+            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
         } else {
             assetIdEditContainer.setError(getString(R.string.error_get_asset_id));
         }
