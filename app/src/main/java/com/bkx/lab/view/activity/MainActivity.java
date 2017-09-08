@@ -268,6 +268,11 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
+    @Override
+    public void registerOnScan() {
+        submit();
+    }
+
     private void playAnimation(View animationView) {
         animationView.clearAnimation();
         animationView.setVisibility(View.VISIBLE);
@@ -491,8 +496,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     public void showAssetId(String assetId) {
         assetIdEdit.setText(assetId);
         assetIdEdit.setSelection(assetId.length());
-        submit();
-
     }
 
     @Override

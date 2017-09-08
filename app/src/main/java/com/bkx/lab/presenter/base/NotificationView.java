@@ -13,4 +13,6 @@ public interface NotificationView extends MvpView, RegistrationView {
 
     void onUnregistered();
 
+    void registerOnScan();
+
 }

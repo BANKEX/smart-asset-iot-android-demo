@@ -315,6 +315,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         String assetId = parseAssetId(contents);
         if (assetId != null) {
             view.showAssetId(assetId);
+            view.registerOnScan();
         } else {
             view.showGetAssetIdError();
         }
