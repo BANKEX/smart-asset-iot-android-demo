@@ -260,6 +260,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void register(@NonNull String assetId) {
         isRegistrationInProgress.set(true);
+        client = RestHelper.getInstance().getApiClient();
+        client.clearAuthorizations();
         Register registerCall = client.createService(Register.class);
         RegisterBody body = getRegisterBody(assetId);
         registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
