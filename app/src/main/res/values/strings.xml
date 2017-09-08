@@ -42,4 +42,7 @@
     <string name="close">Close</string>
     <string name="information">Information</string>
     <string name="location_format">Lat: %1$f Long: %2$f</string>
+    <string name="register_success">Asset id was attached to device successfully</string>
+    <string name="location_and_photo_success">Photo and Location sent</string>
+    <string name="shake_success">Shake sent</string>
 </resources>

@@ -47,7 +47,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private DeviceNotificationApi deviceNotificationApi;
 
     private boolean enabled;
-    private boolean executed = true;
+    private boolean canExecute = true;
 
     private String link;
     private Location location;
@@ -73,6 +73,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void prepare() {
         if (dbHelper.isDeviceRegistered()) {
+            enabled = dbHelper.isEnabled();
             setupPresenter();
         } else {
             if (!isViewNull()) {
@@ -141,8 +142,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     @Override
     public void hearShake(@Nullable String timestamp) {
-        if (enabled && executed) {
-            executed = false;
+        if (enabled && canExecute) {
+            canExecute = false;
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
                 sendNotification(ShakeNotificationData.getNotification("Shaked",
                         dbHelper.getDeviceName(),
@@ -165,7 +166,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             }
                         }
 
-                        executed = true;
+                        canExecute = true;
                     }
 
                     @Override
@@ -175,7 +176,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                         if (!isViewNull()) {
                             view.onError();
                         }
-                        executed = true;
+                        canExecute = true;
                     }
                 });
             }
@@ -217,7 +218,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             }
                         }
                     }
-                    executed = true;
+                    canExecute = true;
                 }
 
                 @Override
@@ -226,7 +227,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     if (!isViewNull()) {
                         view.onError();
                     }
-                    executed = true;
+                    canExecute = true;
                 }
             });
         }
@@ -270,9 +271,13 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     RegisterData data = response.body();
                     dbHelper.insertUserModel(data);
                     dbHelper.insertDevice(data);
+                    dbHelper.setEnabled(true);
+                    enabled = true;
+                    canExecute = true;
 
                     addAuth(data.getToken().getAccessToken());
                     isRegistrationInProgress.set(false);
+                    createServices();
                     if (!isViewNull()) {
                         view.onRegistered();
                     }
@@ -352,6 +357,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     @Override
     protected void onDestroyed() {
         clearLocationNotificationData();
+    }
+
+    public void clear() {
+        dbHelper.clearUser();
+        dbHelper.clearDevice();
     }
 }
 

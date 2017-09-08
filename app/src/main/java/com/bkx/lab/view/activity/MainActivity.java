@@ -212,14 +212,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-        Snackbar snackbar = Snackbar.make(buttonContainer, "Shake sent", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(buttonContainer, R.string.shake_success, Snackbar.LENGTH_SHORT);
         snackbar.show();
         vibrate(500);
     }
 
     @Override
     public void onLocationNotificationSent() {
-        Snackbar snackbar = Snackbar.make(buttonContainer, "Photo and Location sent", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(buttonContainer, R.string.location_and_photo_success, Snackbar.LENGTH_SHORT);
         snackbar.show();
         Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
@@ -233,7 +233,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onError() {
-        Snackbar snackbar = Snackbar.make(buttonContainer, "Something went wrong", Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(buttonContainer, R.string.something_went_wrong, Snackbar.LENGTH_SHORT);
         snackbar.show();
         coordinates.setVisibility(View.GONE);
         progressBar.setVisibility(View.INVISIBLE);
@@ -244,7 +244,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onUnregistered() {
-
+        presenter.clear();
+        enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
     private void playAnimation(LottieAnimationView animationView) {
@@ -431,6 +432,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onRegistered() {
+        Snackbar.make(buttonContainer, R.string.register_success, Snackbar.LENGTH_SHORT)
+                .show();
         showLoading(false);
         enableAllViews(true, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
