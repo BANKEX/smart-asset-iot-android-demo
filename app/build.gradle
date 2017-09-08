@@ -16,7 +16,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -101,6 +101,7 @@ dependencies {
     //QR Code Scanner
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
+
 
 
     testCompile 'junit:junit:4.12'
