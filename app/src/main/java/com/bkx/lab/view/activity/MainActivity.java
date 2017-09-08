@@ -269,6 +269,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     private void playAnimation(View animationView) {
+        animationView.clearAnimation();
         animationView.setVisibility(View.VISIBLE);
         animationView.setAlpha(0.0f);
         animationView.animate()
