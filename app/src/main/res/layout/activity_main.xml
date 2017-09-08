@@ -63,7 +63,7 @@
                 android:gravity="center"
                 android:text="@string/description"
                 android:textColor="@color/textColorBlue"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                         android:id="@+id/asset_id_edit_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="@dimen/half_margin"
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
@@ -98,18 +98,18 @@
                         android:id="@+id/submit"
                         style="@style/OvalButton"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/button_height_size"
                         android:layout_weight="2"
                         android:text="@string/submit"
                         android:textAllCaps="true"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_16sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/scanCode"
                     style="@style/OvalButton"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/button_height_size"
                     android:clickable="true"
                     android:maxHeight="30dp"
                     android:orientation="horizontal"
@@ -138,7 +138,7 @@
                         android:text="@string/scan_qr_code"
                         android:textAllCaps="true"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_16sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -146,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
-                app:cardCornerRadius="16dp">
+                app:cardCornerRadius="@dimen/cardview_radius">
 
                 <LinearLayout
                     android:id="@+id/shakeLayout"
@@ -180,7 +180,7 @@
                             android:gravity="center|start"
                             android:text="@string/send_shake"
                             android:textColor="@color/text_selector"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/text_16sp" />
 
                         <ProgressBar
                             android:id="@+id/shakeProgressBar"
@@ -194,8 +194,8 @@
 
                         <ImageView
                             android:id="@+id/animationShake"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/animation_size"
+                            android:layout_height="@dimen/animation_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:scaleType="centerCrop"
@@ -205,8 +205,8 @@
 
                         <ImageView
                             android:id="@+id/animationShakeError"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/animation_size"
+                            android:layout_height="@dimen/animation_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:scaleType="centerCrop"
@@ -223,7 +223,7 @@
                         android:layout_marginBottom="@dimen/margin"
                         android:text="@string/send_shake_description"
                         android:textColor="@color/text_selector"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_16sp" />
 
 
                     <Button
@@ -233,7 +233,7 @@
                         android:layout_height="40dp"
                         android:text="@string/button_shake_label"
                         android:textAllCaps="true"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_16sp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
-                app:cardCornerRadius="16dp">
+                app:cardCornerRadius="@dimen/cardview_radius">
 
                 <LinearLayout
                     android:id="@+id/photoLayout"
@@ -277,7 +277,7 @@
                             android:gravity="center|start"
                             android:text="@string/send_photo_and_location"
                             android:textColor="@color/text_selector"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/text_16sp" />
 
 
                         <ProgressBar
@@ -292,8 +292,8 @@
 
                         <ImageView
                             android:id="@+id/animationLocation"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/animation_size"
+                            android:layout_height="@dimen/animation_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:scaleType="centerCrop"
@@ -303,8 +303,8 @@
 
                         <ImageView
                             android:id="@+id/animationLocationError"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="@dimen/animation_size"
+                            android:layout_height="@dimen/animation_size"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:visibility="gone"
@@ -320,7 +320,7 @@
                         android:layout_marginBottom="@dimen/margin"
                         android:text="@string/send_photo_description"
                         android:textColor="@color/text_selector"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_16sp" />
 
                     <TextView
                         android:id="@+id/coordinates"
@@ -334,7 +334,7 @@
                         android:id="@+id/photo_button"
                         style="@style/OvalButton"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/button_height_size"
                         android:text="@string/button_photo_label"
                         android:textAllCaps="true"
                         android:textSize="16sp" />

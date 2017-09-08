@@ -30,10 +30,12 @@ ext {
     adapter_rxjava2 = "2.2.0"
     analytics = "10.2.1"
     android_support = "26.0.0"
+    azure="2.8.5"
     butter_knife = "8.5.1"
     event_bus = "3.0.0"
     file_chooser = "1.0.1"
     junit = "4.12"
+    location_services = "11.2.0"
     lombok = "1.12.6"
     okhttp_logging_interceptor = "3.4.1"
     permissions_dispatcher = "2.3.2"
@@ -73,19 +75,16 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:${retrofit2}"
 
     //Location service
-    compile 'com.google.android.gms:play-services-location:11.2.0'
-    compile 'com.google.firebase:firebase-invites:11.2.0'
-
-    //Animation
-    compile 'com.airbnb.android:lottie:2.1.0'
+    compile "com.google.android.gms:play-services-location:${location_services}"
+    compile "com.google.firebase:firebase-invites:${location_services}"
 
     //EventBus
-    compile 'org.greenrobot:eventbus:3.0.0'
+    compile "org.greenrobot:eventbus:${event_bus}"
     //FileChooser
     compile "andhradroid.dev:aFilechooser:${file_chooser}"
 
     //Azure necessary library
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
+    compile "com.fasterxml.jackson.core:jackson-core:${azure}"
     //RxJava
     compile "io.reactivex.rxjava2:rxandroid:${rxandroid}"
     compile "io.reactivex.rxjava2:rxjava:${rxjava}"
@@ -99,10 +98,8 @@ dependencies {
     // https://mvnrepository.com/artifact/joda-time/joda-time
     compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
 
-    compile 'com.github.apl-devs:appintro:v4.2.2'
-
+    //QR Code Scanner
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
-
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
 
 
