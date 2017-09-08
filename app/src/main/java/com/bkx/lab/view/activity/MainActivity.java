@@ -223,7 +223,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-       playAnimation(animationShake);
+        playAnimation(animationShake);
 
     }
 
@@ -491,6 +491,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     public void showAssetId(String assetId) {
         assetIdEdit.setText(assetId);
         assetIdEdit.setSelection(assetId.length());
+        submit();
+
     }
 
     @Override
