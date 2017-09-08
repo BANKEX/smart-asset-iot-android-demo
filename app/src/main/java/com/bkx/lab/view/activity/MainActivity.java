@@ -1,6 +1,7 @@
 package com.bkx.lab.view.activity;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -102,6 +103,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     LinearLayout photoLayout;
     @BindView(R.id.photoTitleLayout)
     RelativeLayout photoTitleLayout;
+    @BindView(R.id.animationShake)
+    LottieAnimationView animationShake;
+    @BindView(R.id.animationLocation)
+    LottieAnimationView animationLocation;
+    @BindView(R.id.animationShakeError)
+    LottieAnimationView animationShakeError;
+    @BindView(R.id.animationLocationError)
+    LottieAnimationView animationLocationError;
 
     private boolean scannedContentReceived;
     private String scannedContent;
@@ -139,6 +148,103 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        prepareAnimation();
+    }
+
+    void prepareAnimation() {
+        animationShakeError.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationShake.setVisibility(View.GONE);
+                animationShakeError.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationShakeError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationShakeError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationShakeError.setVisibility(View.GONE);
+            }
+        });
+        animationShake.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationShakeError.setVisibility(View.GONE);
+                animationShake.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationShake.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationShake.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationShake.setVisibility(View.GONE);
+            }
+        });
+        animationLocationError.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+                animationLocationError.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationLocationError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationLocationError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationLocationError.setVisibility(View.GONE);
+            }
+        });
+        animationLocation.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                animationLocationError.setVisibility(View.GONE);
+                animationLocation.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                animationLocation.setVisibility(View.GONE);
+            }
+        });
+
+        animationLocationError.setVisibility(View.GONE);
+        animationShakeError.setVisibility(View.GONE);
+        animationShake.setVisibility(View.GONE);
+        animationLocation.setVisibility(View.GONE);
     }
 
     @Override
@@ -212,23 +318,33 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-        Snackbar snackbar = Snackbar.make(buttonContainer, R.string.shake_success, Snackbar.LENGTH_SHORT);
-        snackbar.show();
-        vibrate(500);
+        playAnimation(animationShake);
     }
 
     @Override
     public void onLocationNotificationSent() {
-        Snackbar snackbar = Snackbar.make(buttonContainer, R.string.location_and_photo_success, Snackbar.LENGTH_SHORT);
-        snackbar.show();
         Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
                 location.getLatitude(),
                 location.getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
-        vibrate(500);
+        playAnimation(animationLocation);
 
+    }
+
+    @Override
+    public void onLocationError() {
+        coordinates.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        photoProgressBar.setVisibility(View.INVISIBLE);
+        playAnimation(animationLocationError);
+    }
+
+    @Override
+    public void onShakeError() {
+        shakeProgressBar.setVisibility(View.INVISIBLE);
+        playAnimation(animationShakeError);
     }
 
     @Override
@@ -238,8 +354,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         coordinates.setVisibility(View.GONE);
         progressBar.setVisibility(View.INVISIBLE);
         photoProgressBar.setVisibility(View.INVISIBLE);
-        shakeProgressBar.setVisibility(View.INVISIBLE);
-        vibrate(500);
     }
 
     @Override
@@ -276,7 +390,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         UIUtils.hideKeyboard(this);
         if (!ClientUtils.isNetworkConnected(this)) {
             UIUtils.showInternetConnectionAlertDialog(this);
-            photoProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
         String value = assetIdEdit.getText().toString();
@@ -318,7 +431,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                             startActivityForResult(takePictureIntent, TAKE_PHOTO);
                         }
-                    }, t -> onError());
+                    }, t -> onLocationError());
         }
     }
 

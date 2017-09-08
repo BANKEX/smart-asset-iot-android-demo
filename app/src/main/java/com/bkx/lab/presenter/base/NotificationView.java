@@ -5,6 +5,10 @@ public interface NotificationView extends MvpView, RegistrationView {
 
     void onLocationNotificationSent();
 
+    void onLocationError();
+
+    void onShakeError();
+
     void onError();
 
     void onUnregistered();

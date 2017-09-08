@@ -59,10 +59,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/description_margin"
                 android:gravity="center"
                 android:text="@string/description"
                 android:textColor="@color/textColorBlue"
-                android:layout_marginBottom="@dimen/description_margin"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -159,6 +159,8 @@
                         android:id="@+id/shakeTitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -166,7 +168,6 @@
                             android:layout_width="@dimen/event_image_size"
                             android:layout_height="@dimen/event_image_size"
                             android:layout_centerVertical="true"
-                            android:layout_marginBottom="@dimen/margin"
                             android:layout_marginEnd="@dimen/margin"
                             android:src="@drawable/ico_shake" />
 
@@ -176,7 +177,6 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="@dimen/margin"
                             android:layout_toEndOf="@+id/imageShake"
                             android:gravity="center|start"
                             android:text="@string/send_shake"
@@ -192,6 +192,27 @@
                             android:layout_centerVertical="true"
                             android:indeterminate="true"
                             android:visibility="invisible" />
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationShake"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
+                            app:lottie_fileName="done_button.json"
+                            app:lottie_scale="1" />
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationShakeError"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
+                            app:lottie_fileName="x_pop.json"
+                            app:lottie_scale="0.2" />
+
 
                     </RelativeLayout>
 
@@ -233,6 +254,8 @@
                         android:id="@+id/photoTitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -240,7 +263,6 @@
                             android:layout_width="@dimen/event_image_size"
                             android:layout_height="@dimen/event_image_size"
                             android:layout_centerVertical="true"
-                            android:layout_marginBottom="@dimen/margin"
                             android:layout_marginEnd="@dimen/margin"
                             android:src="@drawable/ico_photo" />
 
@@ -250,7 +272,6 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center"
-                            android:layout_marginBottom="@dimen/margin"
                             android:layout_toEndOf="@+id/imagePhoto"
                             android:gravity="center|start"
                             android:text="@string/send_photo_and_location"
@@ -268,6 +289,26 @@
                             android:indeterminate="true"
                             android:visibility="invisible" />
 
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationLocation"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
+                            app:lottie_fileName="location_pin.json"
+                            app:lottie_scale="0.2" />
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationLocationError"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"
+                            app:lottie_fileName="x_pop.json"
+                            app:lottie_scale="0.2" />
+
                     </RelativeLayout>
 
                     <TextView
@@ -277,13 +318,14 @@
                         android:text="@string/send_photo_description"
                         android:textColor="@color/text_selector"
                         android:textSize="16sp" />
+
                     <TextView
-                        android:layout_width="match_parent"
                         android:id="@+id/coordinates"
-                        tools:text="Lat: 60.169856   Long: 24.938379"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin"
                         android:visibility="gone"
-                        android:layout_height="wrap_content" />
+                        tools:text="Lat: 60.169856   Long: 24.938379" />
 
                     <Button
                         android:id="@+id/photo_button"

@@ -161,7 +161,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                                     dbHelper.clearDevice();
                                     view.onUnregistered();
                                 } else {
-                                    view.onError();
+                                    view.onShakeError();
                                 }
                             }
                         }
@@ -174,7 +174,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                             t) {
                         Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
                         if (!isViewNull()) {
-                            view.onError();
+                            view.onShakeError();
                         }
                         canExecute = true;
                     }
@@ -214,7 +214,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                                 dbHelper.clearDevice();
                                 view.onUnregistered();
                             } else {
-                                view.onError();
+                                view.onLocationError();
                             }
                         }
                     }
@@ -225,7 +225,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 public void onFailure(@NonNull Call<InsertNotification> call, @NonNull Throwable t) {
                     Timber.d("NOTIFICATION INSERT FAIL " + t.getMessage());
                     if (!isViewNull()) {
-                        view.onError();
+                        view.onLocationError();
                     }
                     canExecute = true;
                 }
@@ -293,6 +293,9 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             public void onFailure(Call<RegisterData> call, Throwable t) {
                 Timber.d(t.getMessage());
                 isRegistrationInProgress.set(false);
+                if (!isViewNull()) {
+                    view.onRegistrationError();
+                }
             }
         });
     }
