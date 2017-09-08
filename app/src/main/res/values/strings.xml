@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">BKX IoT</string>
-    <string name="description">This is a Demo Application\nto emulate IoT Sensor signals for integration\ninto a Smart Asset generated on the blockchain\nwith the BKX Proof-of-Asset Protocol.</string>
+    <string name="description">This is a Demo Application\n to emulate IoT Sensor signals for integration\ninto a Smart Asset generated\nwith the BKX Proof-of-Asset Protocol.</string>
     <string name="permission_dialog_title">No permissions granted</string>
     <string name="dialog_title">No internet connection</string>
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
@@ -25,7 +25,7 @@
     <string name="error_incorrect_asset_id">Incorrect asset id</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="asset_id_empty">Asset Id cannot be empty</string>
-    <string name="about_info_header">To use the application create a blockchain-based Smart Asset following the steps <a href="https://bankex.com/metamask">here</a></string>
+    <string name="about_info_header">To use the application create a Smart Asset following the steps <a href="https://bankex.com/metamask">here</a></string>
     <string name="about_info_link">https://bankex.com/metamask</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
     <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
