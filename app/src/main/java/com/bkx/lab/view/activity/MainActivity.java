@@ -2,6 +2,7 @@ package com.bkx.lab.view.activity;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,12 +32,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.bkx.lab.BuildConfig;
 import com.bkx.lab.R;
 import com.bkx.lab.model.prefs.PreferencesRepository;
@@ -104,13 +105,13 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @BindView(R.id.photoTitleLayout)
     RelativeLayout photoTitleLayout;
     @BindView(R.id.animationShake)
-    LottieAnimationView animationShake;
+    ImageView animationShake;
     @BindView(R.id.animationLocation)
-    LottieAnimationView animationLocation;
+    ImageView animationLocation;
     @BindView(R.id.animationShakeError)
-    LottieAnimationView animationShakeError;
+    ImageView animationShakeError;
     @BindView(R.id.animationLocationError)
-    LottieAnimationView animationLocationError;
+    ImageView animationLocationError;
 
     private boolean scannedContentReceived;
     private String scannedContent;
@@ -148,104 +149,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        prepareAnimation();
     }
 
-    void prepareAnimation() {
-        animationShakeError.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationShake.setVisibility(View.GONE);
-                animationShakeError.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationShakeError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationShakeError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationShakeError.setVisibility(View.GONE);
-            }
-        });
-        animationShake.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationShakeError.setVisibility(View.GONE);
-                animationShake.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationShake.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationShake.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationShake.setVisibility(View.GONE);
-            }
-        });
-        animationLocationError.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-                animationLocationError.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationLocationError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationLocationError.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationLocationError.setVisibility(View.GONE);
-            }
-        });
-        animationLocation.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-                animationLocationError.setVisibility(View.GONE);
-                animationLocation.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-                animationLocation.setVisibility(View.GONE);
-            }
-        });
-
-        animationLocationError.setVisibility(View.GONE);
-        animationShakeError.setVisibility(View.GONE);
-        animationShake.setVisibility(View.GONE);
-        animationLocation.setVisibility(View.GONE);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -318,7 +223,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
-        playAnimation(animationShake);
+       playAnimation(animationShake);
+
     }
 
     @Override
@@ -362,8 +268,28 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
-    private void playAnimation(LottieAnimationView animationView) {
-        animationView.playAnimation();
+    private void playAnimation(View animationView) {
+        animationView.setVisibility(View.VISIBLE);
+        animationView.setAlpha(0.0f);
+        animationView.animate()
+                .alpha(1f)
+                .setDuration(400)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        animationView.animate()
+                                .alpha(0f)
+                                .setDuration(300)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        super.onAnimationEnd(animation);
+                                        animationView.setVisibility(View.GONE);
+                                    }
+                                });
+                    }
+                });
         vibrate(500);
     }
 

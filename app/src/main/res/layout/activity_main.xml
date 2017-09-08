@@ -160,7 +160,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin"
-                        android:layout_marginTop="@dimen/margin"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -193,25 +192,27 @@
                             android:indeterminate="true"
                             android:visibility="invisible" />
 
-                        <com.airbnb.lottie.LottieAnimationView
+                        <ImageView
                             android:id="@+id/animationShake"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_checked"
                             android:visibility="gone"
-                            app:lottie_fileName="done_button.json"
-                            app:lottie_scale="1" />
+                            tools:visibility="visible" />
 
-                        <com.airbnb.lottie.LottieAnimationView
+                        <ImageView
                             android:id="@+id/animationShakeError"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_error"
                             android:visibility="gone"
-                            app:lottie_fileName="x_pop.json"
-                            app:lottie_scale="0.2" />
+                            tools:visibility="visible" />
 
 
                     </RelativeLayout>
@@ -289,25 +290,27 @@
                             android:indeterminate="true"
                             android:visibility="invisible" />
 
-                        <com.airbnb.lottie.LottieAnimationView
+                        <ImageView
                             android:id="@+id/animationLocation"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_checked"
                             android:visibility="gone"
-                            app:lottie_fileName="location_pin.json"
-                            app:lottie_scale="0.2" />
+                            tools:visibility="visible" />
 
-                        <com.airbnb.lottie.LottieAnimationView
+                        <ImageView
                             android:id="@+id/animationLocationError"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:visibility="gone"
-                            app:lottie_fileName="x_pop.json"
-                            app:lottie_scale="0.2" />
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_error"
+                            tools:visibility="visible" />
 
                     </RelativeLayout>
 
