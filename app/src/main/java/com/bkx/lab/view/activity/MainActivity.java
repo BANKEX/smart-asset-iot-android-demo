@@ -552,7 +552,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     public void onPhotoUploadFail(@Nullable String message) {
         Snackbar snackbar = Snackbar.make(buttonContainer, "Image uploading failed", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(getString(android.R.string.ok),
-                v -> snackbar.dismiss());
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                });
 
         snackbar.show();
     }
