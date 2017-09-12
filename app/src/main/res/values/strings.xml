@@ -13,7 +13,7 @@
     <string name="about_info">On the stage of Smart Asset validation:\n\n1) Launch application;\n\n2) Scan the QR code of the Asset that needs to be validated;\n\n3) On the main page of the application, press the “Shake” button or simply shake your phone to generate a motion sensor signal;\n\n4) On the main page of the application press the “Photo” button to generate a geolocation sensor signal and photo-verification;\n\n5) Check for validation confirmation on the Smart Asset page.</string>
 
     <string name="button_shake_label">Send Shake</string>
-    <string name="button_photo_label">Send Photo</string>
+    <string name="button_photo_label">Send Photo and Location</string>
     <string name="send_hint_label">Check for validation confirmation\n on the Smart Asset page</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
@@ -26,9 +26,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="asset_id_empty">Asset Id cannot be empty</string>
     <string name="about_info_header">To use the application create a Smart Asset following the steps <a href="https://bankex.com/metamask">here</a></string>
-    <string name="about_info_link">https://bankex.com/metamask</string>
+    <string name="about_info_link">http://bit.ly/2wmSF1B</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
-    <string name="send_photo_description">Press the “Send Photo” button to generate a geolocation sensor signal and photo-verification</string>
+    <string name="send_photo_description">Press the “Send Photo and Location” button to generate a geolocation sensor signal and photo-verification</string>
     <string name="submit">submit</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="send_shake">Send Shake</string>
@@ -38,5 +38,7 @@
     <string name="location_format">Lat: %1$f Long: %2$f</string>
     <string name="register_success">Asset id was attached to device successfully</string>
     <string name="location_and_photo_success">Photo and Location sent</string>
-    <string name="shake_success">Shake sent</string>
+    <string name="shake_success">Signal has been successfully sent. Now send geo and photo sensors signal.</string>
+    <string name="photo_success">Geo and photo sensors signal has been successfully sent. Now go back to Smart Asset #%s web page and click Collect Sensor Data to process the signals</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

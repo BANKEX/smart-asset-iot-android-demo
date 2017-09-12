@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -223,12 +224,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
     @Override
     public void onShakeNotificationSent() {
+        UIUtils.hideKeyboard(this);
         playAnimation(animationShake);
-
+        showSnackBar(getString(R.string.shake_success));
     }
 
     @Override
     public void onLocationNotificationSent() {
+        UIUtils.hideKeyboard(this);
         Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
@@ -236,7 +239,21 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 location.getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
         playAnimation(animationLocation);
+        showSnackBar(String.format(getString(R.string.photo_success), presenter.getDeviceId()));
 
+    }
+
+    private void showSnackBar(String text) {
+        Snackbar snackbar = Snackbar.make(buttonContainer,
+                text,
+                Snackbar.LENGTH_INDEFINITE);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.snackbar_color));
+        snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
+        TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setMaxLines(5);
+        snackbar.setAction(getString(R.string.dismiss), view1 -> snackbar.dismiss());
+        snackbar.show();
     }
 
     @Override
