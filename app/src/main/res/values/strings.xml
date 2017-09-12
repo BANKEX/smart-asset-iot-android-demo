@@ -25,7 +25,7 @@
     <string name="error_incorrect_asset_id">Incorrect asset id</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="asset_id_empty">Asset Id cannot be empty</string>
-    <string name="about_info_header">To use the application create a Smart Asset following the steps <a href="https://bankex.com/metamask">here</a></string>
+    <string name="about_info_header">To use the application create a Smart Asset following the steps <a href="http://bit.ly/2wmSF1B">here</a></string>
     <string name="about_info_link">http://bit.ly/2wmSF1B</string>
     <string name="send_shake_description">Press the “Send Shake” button or simply shake your phone to generate a motion sensor signal</string>
     <string name="send_photo_description">Press the “Send Photo and Location” button to generate a geolocation sensor signal and photo-verification</string>
