@@ -4,8 +4,13 @@ import com.bkx.lab.utils.Const;
 import com.devicehive.rest.ApiClient;
 
 public class RestHelper {
+    private ApiClient apiClient;
 
     private RestHelper() {
+        if (Const.URL.length() <= 0) {
+            throw new NullPointerException("Server URL cannot be null or empty");
+        }
+        apiClient = new ApiClient(Const.URL);
     }
 
     private static class InstanceHolder {
@@ -17,7 +22,12 @@ public class RestHelper {
     }
 
     public ApiClient getApiClient() {
-        return new ApiClient(Const.URL);
+        return apiClient;
+    }
+
+    public ApiClient recreateClient() {
+        apiClient = new ApiClient(Const.URL);
+        return apiClient;
     }
 
 }

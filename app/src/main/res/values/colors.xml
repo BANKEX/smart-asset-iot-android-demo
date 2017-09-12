@@ -12,5 +12,6 @@
     <color name="primaryText">#212121</color>
     <color name="introSlideBackground">#84AABC</color>
     <color name="linkColor">#0645AD</color>
+    <color name="snackbar_color">#283952</color>
 </resources>
 

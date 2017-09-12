@@ -11,4 +11,12 @@ public class RegisterBody {
     String id;
     @SerializedName("name")
     String name;
+
+    @Override
+    public String toString() {
+        return "{\"RegisterBody\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"name\":\"" + name + "\""
+                + "}}";
+    }
 }

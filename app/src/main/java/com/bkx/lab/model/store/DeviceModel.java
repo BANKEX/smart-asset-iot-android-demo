@@ -3,8 +3,10 @@ package com.bkx.lab.model.store;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class DeviceModel extends RealmObject {
     public static final long DEFAULT_ID = 1L;
 
