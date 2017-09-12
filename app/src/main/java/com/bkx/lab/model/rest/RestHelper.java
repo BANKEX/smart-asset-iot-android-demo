@@ -7,6 +7,10 @@ public class RestHelper {
     private ApiClient apiClient;
 
     private RestHelper() {
+        if (Const.URL.length() <= 0) {
+            throw new NullPointerException("Server URL cannot be null or empty");
+        }
+        apiClient = new ApiClient(Const.URL);
     }
 
     private static class InstanceHolder {
@@ -18,9 +22,11 @@ public class RestHelper {
     }
 
     public ApiClient getApiClient() {
-        if (apiClient == null) {
-            apiClient = new ApiClient(Const.URL);
-        }
+        return apiClient;
+    }
+
+    public ApiClient recreateClient() {
+        apiClient = new ApiClient(Const.URL);
         return apiClient;
     }
 

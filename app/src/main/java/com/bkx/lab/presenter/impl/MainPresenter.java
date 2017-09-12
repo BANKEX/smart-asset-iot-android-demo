@@ -53,10 +53,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private String link;
     private Location location;
 
-    private static final String ASSET_ID_QUERY_PARAMETER = "id";
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
-    public static final String LINK_PARAM = "link";
     private final PreferencesRepository preferencesRepository;
     private ApiClient client;
 
@@ -70,7 +68,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         client = RestHelper.getInstance().getApiClient();
         enabled = dbHelper.isEnabled();
     }
-
 
     public void prepare() {
         if (dbHelper.isDeviceRegistered()) {
@@ -91,7 +88,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void addAuth(String accessToken) {
-        client.addAuthorization(ApiClient.AUTH_API_KEY,
+        RestHelper.getInstance().getApiClient().addAuthorization(ApiClient.AUTH_API_KEY,
                 ApiKeyAuth.newInstance(accessToken));
     }
 
@@ -261,6 +258,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void register(@NonNull String assetId) {
         isRegistrationInProgress.set(true);
+        client = RestHelper.getInstance().recreateClient();
         Register registerCall = client.createService(Register.class);
         RegisterBody body = getRegisterBody(assetId);
         registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
