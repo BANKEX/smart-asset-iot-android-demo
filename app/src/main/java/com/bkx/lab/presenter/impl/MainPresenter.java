@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.bkx.lab.model.ImageManager;
+import com.bkx.lab.model.parser.ChainParser;
 import com.bkx.lab.model.prefs.PreferencesRepository;
 import com.bkx.lab.model.rest.ImageNotificationData;
 import com.bkx.lab.model.rest.RegisterBody;
@@ -260,8 +261,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void register(@NonNull String assetId) {
         isRegistrationInProgress.set(true);
-        client = RestHelper.getInstance().getApiClient();
-        client.clearAuthorizations();
         Register registerCall = client.createService(Register.class);
         RegisterBody body = getRegisterBody(assetId);
         registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
@@ -339,25 +338,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private String parseAssetId(String contents) {
-        try {
-            return Uri.parse(Uri.parse(contents)
-                    .getQueryParameter(LINK_PARAM))
-                    .getQueryParameter(ASSET_ID_QUERY_PARAMETER);
-        } catch (Exception e) {
-            Timber.e(e, "Failed to parse scanned content: %s", contents);
-        }
-        return parseAssetIdOldFormat(contents);
-    }
-
-    private String parseAssetIdOldFormat(String contents) {
-        try {
-            return Uri.parse(contents)
-                    .getQueryParameter(ASSET_ID_QUERY_PARAMETER);
-        } catch (Exception ex) {
-            Timber.e(ex, "Failed to parse scanned content: %s", contents);
-
-        }
-        return null;
+        return ChainParser.getInstance().parseAssetId(contents);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.bkx.lab.utils.Const;
 import com.devicehive.rest.ApiClient;
 
 public class RestHelper {
+    private ApiClient apiClient;
 
     private RestHelper() {
     }
@@ -17,7 +18,10 @@ public class RestHelper {
     }
 
     public ApiClient getApiClient() {
-        return new ApiClient(Const.URL);
+        if (apiClient == null) {
+            apiClient = new ApiClient(Const.URL);
+        }
+        return apiClient;
     }
 
 }
