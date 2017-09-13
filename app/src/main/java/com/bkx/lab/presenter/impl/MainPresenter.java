@@ -88,7 +88,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void addAuth(String accessToken) {
-        RestHelper.getInstance().getApiClient().addAuthorization(ApiClient.AUTH_API_KEY,
+        client.addAuthorization(ApiClient.AUTH_API_KEY,
                 ApiKeyAuth.newInstance(accessToken));
     }
 
@@ -258,10 +258,13 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void register(@NonNull String assetId) {
         isRegistrationInProgress.set(true);
-        client = RestHelper.getInstance().recreateClient();
-        Register registerCall = client.createService(Register.class);
+        Register registerCall = RestHelper
+                .getInstance()
+                .getRegistrationApiClient()
+                .createService(Register.class);
+
         RegisterBody body = getRegisterBody(assetId);
-        registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
+        registerCall.register(body).enqueue(new Callback<RegisterData>() {
             @Override
             public void onResponse(Call<RegisterData> call, Response<RegisterData> response) {
                 Timber.d(response.toString());
