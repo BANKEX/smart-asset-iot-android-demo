@@ -5,14 +5,12 @@ import com.devicehive.rest.ApiClient;
 
 public class RestHelper {
     private ApiClient apiClient;
-    private ApiClient registrationApiClient;
 
     private RestHelper() {
         if (Const.URL.length() <= 0) {
             throw new NullPointerException("Server URL cannot be null or empty");
         }
         apiClient = new ApiClient(Const.URL);
-        registrationApiClient = new ApiClient(Const.REGISTER_URL);
     }
 
     private static class InstanceHolder {
@@ -27,8 +25,9 @@ public class RestHelper {
         return apiClient;
     }
 
-    public ApiClient getRegistrationApiClient() {
-        return registrationApiClient;
+    public ApiClient recreateClient() {
+        apiClient = new ApiClient(Const.URL);
+        return apiClient;
     }
 
 }

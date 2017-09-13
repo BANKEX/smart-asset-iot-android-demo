@@ -8,10 +8,11 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Url;
 
 public interface Register {
 
-    @POST("register")
+    @POST
     @Headers({"ContentType: application/json", "Authorization:" + Const.KEY})
-    Call<RegisterData> register(@Body RegisterBody body);
+    Call<RegisterData> register(@Url String url, @Body RegisterBody body);
 }

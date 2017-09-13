@@ -88,7 +88,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void addAuth(String accessToken) {
-        client.addAuthorization(ApiClient.AUTH_API_KEY,
+        RestHelper.getInstance().getApiClient().addAuthorization(ApiClient.AUTH_API_KEY,
                 ApiKeyAuth.newInstance(accessToken));
     }
 
@@ -258,13 +258,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     public void register(@NonNull String assetId) {
         isRegistrationInProgress.set(true);
-        Register registerCall = RestHelper
-                .getInstance()
-                .getRegistrationApiClient()
-                .createService(Register.class);
-
+        client = RestHelper.getInstance().recreateClient();
+        Register registerCall = client.createService(Register.class);
         RegisterBody body = getRegisterBody(assetId);
-        registerCall.register(body).enqueue(new Callback<RegisterData>() {
+        registerCall.register(Const.REGISTER_URL, body).enqueue(new Callback<RegisterData>() {
             @Override
             public void onResponse(Call<RegisterData> call, Response<RegisterData> response) {
                 Timber.d(response.toString());
@@ -352,5 +349,3 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         dbHelper.clearDevice();
     }
 }
-
-
