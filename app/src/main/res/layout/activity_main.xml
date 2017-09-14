@@ -91,6 +91,7 @@
                             android:layout_height="40dp"
                             android:hint="@string/asset_id_hint"
                             android:inputType="number"
+                            android:imeOptions="actionDone"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 

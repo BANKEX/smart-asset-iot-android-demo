@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -146,6 +147,14 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
         ButterKnife.bind(this);
         assetIdEdit.addTextChangedListener(watcher);
+        assetIdEdit.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submit();
+                handled = true;
+            }
+            return handled;
+        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 

@@ -228,6 +228,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     canExecute = true;
                 }
             });
+        } else {
+            canExecute = true;
+            if (!isViewNull()) {
+                view.onLocationError();
+            }
         }
     }
 
