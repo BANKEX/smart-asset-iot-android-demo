@@ -1,13 +1,13 @@
 package com.bkx.lab.presenter.impl;
 
 import android.content.Context;
-import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.bkx.lab.model.ImageManager;
+import com.bkx.lab.model.Location;
 import com.bkx.lab.model.parser.ChainParser;
 import com.bkx.lab.model.prefs.PreferencesRepository;
 import com.bkx.lab.model.rest.ImageNotificationData;
@@ -51,10 +51,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private boolean canExecute = true;
 
     private String link;
-    private Location location;
+    private Location location = new Location();
 
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
+
+
     private final PreferencesRepository preferencesRepository;
     private ApiClient client;
 
@@ -183,7 +185,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     public void onLocationChanged(Location location) {
-        this.location = location;
+        if (location != null) {
+            this.location.setLongitude(location.getLongitude());
+            this.location.setLatitude(location.getLatitude());
+        }
     }
 
     public Location getLocation() {
@@ -191,8 +196,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     private void sendLocationNotification(Location location, String link) {
-        if (location != null && !TextUtils.isEmpty(link)) {
-
+        if (!TextUtils.isEmpty(link)) {
+            if (location != null) {
+                location.setLatitude(location.getLatitude());
+                location.setLongitude(location.getLongitude());
+            }
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link,
                     dbHelper.getDeviceName(),
                     dbHelper.getDeviceId(),

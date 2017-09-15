@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -241,14 +240,21 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     public void onLocationNotificationSent() {
         UIUtils.hideKeyboard(this);
-        Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
-                location.getLatitude(),
-                location.getLongitude()));
+                presenter.getLocation().getLatitude(),
+                presenter.getLocation().getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
         playAnimation(animationLocation);
-        showSnackBar(String.format(getString(R.string.photo_success), presenter.getDeviceId()));
+        StringBuilder builder = new StringBuilder();
+        if (presenter.getLocation() == null) {
+            builder.append(getString(R.string.location_get_error));
+            builder.append("\n");
+            builder.append(getString(R.string.photo_success));
+        } else {
+            builder.append(getString(R.string.photo_success));
+        }
+        showSnackBar(String.format(builder.toString(), presenter.getDeviceId()));
 
     }
 
@@ -260,7 +266,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.snackbar_color));
         snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
         TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setMaxLines(5);
+        textView.setMaxLines(10);
         snackbar.setAction(getString(R.string.dismiss), view1 -> snackbar.dismiss());
         snackbar.show();
     }
@@ -404,7 +410,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         locationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
-                        presenter.onLocationChanged(location);
+                        presenter.onLocationChanged(null);
                     }
                 })
                 .addOnFailureListener(Throwable::printStackTrace);
