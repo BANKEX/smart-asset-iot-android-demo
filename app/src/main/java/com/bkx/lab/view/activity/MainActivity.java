@@ -246,15 +246,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                 presenter.getLocation().getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
         playAnimation(animationLocation);
-        StringBuilder builder = new StringBuilder();
-        if (presenter.getLocation() == null) {
-            builder.append(getString(R.string.location_get_error));
-            builder.append("\n");
-            builder.append(getString(R.string.photo_success));
-        } else {
-            builder.append(getString(R.string.photo_success));
-        }
-        showSnackBar(String.format(builder.toString(), presenter.getDeviceId()));
+        showSnackBar(String.format(getString(R.string.location_format), presenter.getDeviceId()));
 
     }
 
