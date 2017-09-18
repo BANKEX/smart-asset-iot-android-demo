@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Location {
+public class LocationEntity {
+
     private static final double DEFAULT_LATITUDE = 40.710652;
     private static final double DEFAULT_LONGITUDE = -74.015577;
 

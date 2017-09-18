@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import com.bkx.lab.BuildConfig;
 import com.bkx.lab.R;
+import com.bkx.lab.model.LocationEntity;
 import com.bkx.lab.model.prefs.PreferencesRepository;
 import com.bkx.lab.model.store.DataBaseHelper;
 import com.bkx.lab.presenter.base.BasePresenterActivity;
@@ -51,6 +52,7 @@ import com.bkx.lab.utils.ClientUtils;
 import com.bkx.lab.utils.ShakeDetector;
 import com.bkx.lab.utils.UIUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -65,14 +67,14 @@ import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-
 @RuntimePermissions
 public class MainActivity extends BasePresenterActivity<MainPresenter, NotificationView> implements NotificationView {
 
     private MainPresenter presenter;
-    private SensorManager mSensorManager;
+    private SensorManager sensorManager;
     private ShakeDetector sd;
+    private FusedLocationProviderClient locationClient;
+
     @BindView(R.id.buttonContainer)
     View buttonContainer;
     @BindView(R.id.shake_button)
@@ -157,7 +159,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        locationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
 
@@ -182,7 +185,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onResume() {
         super.onResume();
         if (sd != null) {
-            sd.start(mSensorManager);
+            sd.start(sensorManager);
         }
         showLoading(DataBaseHelper.getInstance().isDeviceRegistered() && presenter.isRegistration());
         FirebaseDynamicLinks.getInstance()
@@ -238,12 +241,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     @Override
-    public void onLocationNotificationSent() {
+    public void onLocationNotificationSent(LocationEntity location) {
         UIUtils.hideKeyboard(this);
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
-                presenter.getLocation().getLatitude(),
-                presenter.getLocation().getLongitude()));
+                location.getLatitude(),
+                location.getLongitude()));
         photoProgressBar.setVisibility(View.INVISIBLE);
         playAnimation(animationLocation);
         showSnackBar(String.format(getString(R.string.photo_success), presenter.getDeviceId()));
@@ -394,7 +397,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void getLastLocation() {
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -402,10 +404,10 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         locationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
-                        presenter.onLocationChanged(null);
+                        presenter.onLocationChanged(location);
                     }
                 })
-                .addOnFailureListener(Throwable::printStackTrace);
+                .addOnFailureListener(error -> Timber.e("Failed to get location"));
     }
 
 
