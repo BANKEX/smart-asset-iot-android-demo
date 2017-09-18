@@ -147,7 +147,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
                 sendNotification(ShakeNotificationData.getNotification("Shaked",
                         dbHelper.getDeviceName(),
-                        dbHelper.getDeviceName()), new Callback<InsertNotification>() {
+                        dbHelper.getDeviceId()), new Callback<InsertNotification>() {
                     @Override
                     public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
                         Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
