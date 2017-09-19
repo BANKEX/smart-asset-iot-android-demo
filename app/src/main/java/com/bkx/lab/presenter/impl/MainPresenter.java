@@ -182,9 +182,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     }
 
-    public void onLocationChanged(@NonNull Location location) {
-        this.location.setLongitude(location.getLongitude());
-        this.location.setLatitude(location.getLatitude());
+    public void onLocationChanged(@NonNull LocationEntity location) {
+        this.location = location;
     }
 
     private void sendLocationNotification(LocationEntity location, String link) {

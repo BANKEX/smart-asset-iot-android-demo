@@ -102,7 +102,7 @@ dependencies {
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
 
-
+    compile 'com.patloew.rxlocation:rxlocation:1.0.3'
 
     testCompile 'junit:junit:4.12'
 }

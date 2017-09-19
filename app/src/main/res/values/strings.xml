@@ -6,6 +6,7 @@
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
     <string name="permission_dialog_message">This action needs permissions</string>
     <string name="location_disabled_message">Location is disabled</string>
+    <string name="location_permission_not_granted_message">Application needs permissions to get location to send it later</string>
     <string name="deviceId">Device\'s ID: %s</string>
 
     <string name="action_about_label">About</string>

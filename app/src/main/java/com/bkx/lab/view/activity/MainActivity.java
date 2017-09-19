@@ -40,6 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bkx.lab.BuildConfig;
+import com.bkx.lab.DemoApplication;
 import com.bkx.lab.R;
 import com.bkx.lab.model.LocationEntity;
 import com.bkx.lab.model.prefs.PreferencesRepository;
@@ -51,8 +52,7 @@ import com.bkx.lab.presenter.impl.MainPresenter;
 import com.bkx.lab.utils.ClientUtils;
 import com.bkx.lab.utils.ShakeDetector;
 import com.bkx.lab.utils.UIUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.bkx.lab.view.RxLocationManager;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -64,6 +64,7 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
@@ -73,7 +74,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private MainPresenter presenter;
     private SensorManager sensorManager;
     private ShakeDetector sd;
-    private FusedLocationProviderClient locationClient;
+    private RxLocationManager locationManager;
 
     @BindView(R.id.buttonContainer)
     View buttonContainer;
@@ -119,6 +120,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private boolean scannedContentReceived;
     private String scannedContent;
 
+    private boolean isStartingIntro;
+
     private static final int TAKE_PHOTO = 2;
 
     TextWatcher watcher = new TextWatcher() {
@@ -160,7 +163,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        locationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationManager = new RxLocationManager(DemoApplication.get(this).getRxLocation());
     }
 
 
@@ -292,7 +295,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     public void onUnregistered() {
         presenter.clear();
-        enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
+        enableAllViews(false, shakeLayout, shakeTitleLayout);
+        enablePhotoViews(false);
     }
 
     @Override
@@ -360,7 +364,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (presenter.validate(value)) {
             presenter.register(value);
             showLoading(true);
-            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
+            enableAllViews(false, shakeLayout, shakeTitleLayout);
+            enablePhotoViews(false);
         } else {
             assetIdEditContainer.setError(getString(R.string.error_get_asset_id));
         }
@@ -368,7 +373,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.CAMERA})
     void takeAPhoto() {
         if (isLocationDisabled()) {
             Snackbar snackbar = Snackbar.make(buttonContainer, R.string.location_disabled_message,
@@ -397,28 +402,34 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void getLastLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        presenter.onLocationChanged(location);
-                    }
-                })
-                .addOnFailureListener(error -> Timber.e("Failed to get location"));
+        presenter.onLocationChanged(locationManager.getLocation());
     }
 
 
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    void showNeverAskAgain() {
+    @OnNeverAskAgain({Manifest.permission.CAMERA})
+    void showCameraPermissionDeniedForever() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(R.string.permission_dialog_message)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                 }).setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void showLocationPermissionDenied() {
+        enablePhotoViews(false);
+        Snackbar.make(buttonContainer, R.string.location_permission_not_granted_message, Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @OnNeverAskAgain({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void showLocationPermissionDeniedForever() {
+        enablePhotoViews(false);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.permission_dialog_title)
+                .setMessage(R.string.location_permission_not_granted_message)
+                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     @Override
@@ -479,11 +490,16 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     public void onStart() {
         super.onStart();
+        if (!isStartingIntro) {
+            MainActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+        }
+
         if (DataBaseHelper.getInstance().isDeviceRegistered()) {
             showAssetId(presenter.getDeviceId());
             assetIdEdit.clearFocus();
         } else {
-            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
+            enableAllViews(false, shakeLayout, shakeTitleLayout);
+            enablePhotoViews(false);
         }
         if (!scannedContentReceived) {
             return;
@@ -499,8 +515,37 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     @Override
+    protected void onStop() {
+        isStartingIntro = false;
+        stopLocationUpdates();
+        super.onStop();
+    }
+
+    @SuppressWarnings("MissingPermission")
+    @NeedsPermission({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    void startLocationUpdates() {
+        if (!isLocationPermissionsGranted()) {
+            return;
+        }
+        enablePhotoViews(DataBaseHelper.getInstance().isDeviceRegistered());
+        locationManager.startLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        locationManager.stopLocationUpdates();
+    }
+
+    private boolean isLocationPermissionsGranted() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
     public void showIntro() {
         IntroActivity.start(this);
+        isStartingIntro = true;
     }
 
     @Override
@@ -508,7 +553,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         Snackbar.make(buttonContainer, R.string.register_success, Snackbar.LENGTH_SHORT)
                 .show();
         showLoading(false);
-        enableAllViews(true, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
+        enableAllViews(true, shakeLayout, shakeTitleLayout);
+        enablePhotoViews(true);
+    }
+
+    private void enablePhotoViews(boolean enabled) {
+        enableAllViews(enabled && isLocationPermissionsGranted(), photoLayout, photoTitleLayout);
     }
 
     @Override
