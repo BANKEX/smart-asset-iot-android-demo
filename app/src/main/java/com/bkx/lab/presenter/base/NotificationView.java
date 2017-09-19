@@ -1,9 +1,11 @@
 package com.bkx.lab.presenter.base;
 
+import com.bkx.lab.model.LocationEntity;
+
 public interface NotificationView extends MvpView, RegistrationView {
     void onShakeNotificationSent();
 
-    void onLocationNotificationSent();
+    void onLocationNotificationSent(LocationEntity location);
 
     void onLocationError();
 

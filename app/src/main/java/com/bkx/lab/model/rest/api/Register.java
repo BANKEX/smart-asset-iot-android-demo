@@ -13,6 +13,6 @@ import retrofit2.http.Url;
 public interface Register {
 
     @POST
-    @Headers({"ContentType: application/json","Authorization:"+ Const.KEY})
-    public Call<RegisterData> register(@Url String url, @Body RegisterBody body);
+    @Headers({"ContentType: application/json", "Authorization:" + Const.KEY})
+    Call<RegisterData> register(@Url String url, @Body RegisterBody body);
 }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.bkx.lab.model.ImageManager;
+import com.bkx.lab.model.LocationEntity;
 import com.bkx.lab.model.parser.ChainParser;
 import com.bkx.lab.model.prefs.PreferencesRepository;
 import com.bkx.lab.model.rest.ImageNotificationData;
@@ -50,11 +51,12 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private boolean enabled;
     private boolean canExecute = true;
 
-    private String link;
-    private Location location;
+    private LocationEntity location = new LocationEntity();
 
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
+
+
     private final PreferencesRepository preferencesRepository;
     private ApiClient client;
 
@@ -113,12 +115,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((link) -> {
-                    this.link = link;
                     sendLocationNotification(location, link);
                     Timber.d(link);
                 }, t -> {
                     t.printStackTrace();
-                    clearLocationNotificationData();
                     if (!isViewNull()) {
                         view.onError();
                     }
@@ -145,7 +145,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             if (!TextUtils.isEmpty(dbHelper.getDeviceId())) {
                 sendNotification(ShakeNotificationData.getNotification("Shaked",
                         dbHelper.getDeviceName(),
-                        dbHelper.getDeviceName()), new Callback<InsertNotification>() {
+                        dbHelper.getDeviceId()), new Callback<InsertNotification>() {
                     @Override
                     public void onResponse(@NonNull Call<InsertNotification> call, @NonNull Response<InsertNotification> response) {
                         Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
@@ -182,17 +182,13 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
 
     }
 
-    public void onLocationChanged(Location location) {
-        this.location = location;
+    public void onLocationChanged(@NonNull Location location) {
+        this.location.setLongitude(location.getLongitude());
+        this.location.setLatitude(location.getLatitude());
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    private void sendLocationNotification(Location location, String link) {
-        if (location != null && !TextUtils.isEmpty(link)) {
-
+    private void sendLocationNotification(LocationEntity location, String link) {
+        if (!TextUtils.isEmpty(link)) {
             DeviceNotificationWrapper wrapper = ImageNotificationData.getNotification(link,
                     dbHelper.getDeviceName(),
                     dbHelper.getDeviceId(),
@@ -203,9 +199,8 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     Timber.d("NOTIFICATION INSERT RESPONSE " + response.code());
                     if (response.isSuccessful()) {
                         if (!isViewNull()) {
-                            view.onLocationNotificationSent();
+                            view.onLocationNotificationSent(location);
                         }
-                        clearLocationNotificationData();
                     } else {
                         if (!isViewNull()) {
                             if (response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED) {
@@ -228,6 +223,11 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                     canExecute = true;
                 }
             });
+        } else {
+            canExecute = true;
+            if (!isViewNull()) {
+                view.onLocationError();
+            }
         }
     }
 
@@ -237,11 +237,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         }
         Call<InsertNotification> notificationCallInsert = deviceNotificationApi.insert(dbHelper.getDeviceId(), notificationWrapper);
         notificationCallInsert.enqueue(callback);
-    }
-
-    private void clearLocationNotificationData() {
-        link = null;
-        location = null;
     }
 
     public boolean isRegistration() {
@@ -340,14 +335,10 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     }
 
     @Override
-    protected void onDestroyed() {
-        clearLocationNotificationData();
-    }
+    protected void onDestroyed() {}
 
     public void clear() {
         dbHelper.clearUser();
         dbHelper.clearDevice();
     }
 }
-
-

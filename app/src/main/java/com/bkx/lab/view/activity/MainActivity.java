@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import com.bkx.lab.BuildConfig;
 import com.bkx.lab.R;
+import com.bkx.lab.model.LocationEntity;
 import com.bkx.lab.model.prefs.PreferencesRepository;
 import com.bkx.lab.model.store.DataBaseHelper;
 import com.bkx.lab.presenter.base.BasePresenterActivity;
@@ -51,6 +52,7 @@ import com.bkx.lab.utils.ClientUtils;
 import com.bkx.lab.utils.ShakeDetector;
 import com.bkx.lab.utils.UIUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -65,14 +67,14 @@ import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
-import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-
 @RuntimePermissions
 public class MainActivity extends BasePresenterActivity<MainPresenter, NotificationView> implements NotificationView {
 
     private MainPresenter presenter;
-    private SensorManager mSensorManager;
+    private SensorManager sensorManager;
     private ShakeDetector sd;
+    private FusedLocationProviderClient locationClient;
+
     @BindView(R.id.buttonContainer)
     View buttonContainer;
     @BindView(R.id.shake_button)
@@ -146,10 +148,19 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
 
         ButterKnife.bind(this);
         assetIdEdit.addTextChangedListener(watcher);
+        assetIdEdit.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submit();
+                handled = true;
+            }
+            return handled;
+        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        locationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
 
@@ -174,7 +185,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     protected void onResume() {
         super.onResume();
         if (sd != null) {
-            sd.start(mSensorManager);
+            sd.start(sensorManager);
         }
         showLoading(DataBaseHelper.getInstance().isDeviceRegistered() && presenter.isRegistration());
         FirebaseDynamicLinks.getInstance()
@@ -230,9 +241,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     @Override
-    public void onLocationNotificationSent() {
+    public void onLocationNotificationSent(LocationEntity location) {
         UIUtils.hideKeyboard(this);
-        Location location = presenter.getLocation();
         coordinates.setVisibility(View.VISIBLE);
         coordinates.setText(String.format(getString(R.string.location_format),
                 location.getLatitude(),
@@ -251,7 +261,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         snackbarView.setBackgroundColor(ContextCompat.getColor(this, R.color.snackbar_color));
         snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.white));
         TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setMaxLines(5);
+        textView.setMaxLines(10);
         snackbar.setAction(getString(R.string.dismiss), view1 -> snackbar.dismiss());
         snackbar.show();
     }
@@ -387,7 +397,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     }
 
     public void getLastLocation() {
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -398,7 +407,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                         presenter.onLocationChanged(location);
                     }
                 })
-                .addOnFailureListener(Throwable::printStackTrace);
+                .addOnFailureListener(error -> Timber.e("Failed to get location", error));
     }
 
 
