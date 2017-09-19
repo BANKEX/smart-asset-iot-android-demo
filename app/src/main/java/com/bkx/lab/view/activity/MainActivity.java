@@ -407,7 +407,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                         presenter.onLocationChanged(location);
                     }
                 })
-                .addOnFailureListener(error -> Timber.e("Failed to get location"));
+                .addOnFailureListener(error -> Timber.e("Failed to get location", error));
     }
 
 
