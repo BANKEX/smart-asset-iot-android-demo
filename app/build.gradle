@@ -14,17 +14,17 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    /*signingConfigs {
+    signingConfigs {
         release {
             storeFile file("../bkx.jks")
-            storePassword RELEASE_KEY_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
+            storePassword 'REPLACE WITH LOCAL PROPERTY'
+            keyAlias 'REPLACE WITH LOCAL PROPERTY'
+            keyPassword 'REPLACE WITH LOCAL PROPERTY'
         }
-    }*/
+    }
     buildTypes {
         release {
-            /*signingConfig signingConfigs.release*/
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
