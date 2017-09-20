@@ -9,14 +9,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.patloew.rxlocation.RxLocation;
 
 import io.reactivex.BackpressureStrategy;
-import io.reactivex.Maybe;
-import io.reactivex.MaybeSource;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -26,7 +22,7 @@ public class RxLocationManager {
 
     private final LocationRequest locationRequest;
 
-    private LocationEntity location = new LocationEntity();
+    private static LocationEntity location = new LocationEntity();
 
     private Disposable locationUpdatesDisposable;
 
@@ -38,12 +34,16 @@ public class RxLocationManager {
 
 
     @SuppressWarnings("MissingPermission")
-    @RequiresPermission(anyOf = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    public void startLocationUpdates() {
-        locationUpdatesDisposable = locationSettings()
+    @RequiresPermission(anyOf = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    })
+    public void startLocationUpdates(boolean checkLocationSettings) {
+        stopLocationUpdates();
+        locationUpdatesDisposable = locationSettingsCheck(checkLocationSettings)
                 .flatMapObservable(ignore -> locationUpdates()
-                        .startWith(lastLocation().toObservable()))
-                .map(this::transformEntity)
+                        .startWith(lastLocation()))
+                .map(this::transformLocation)
                 .toFlowable(BackpressureStrategy.LATEST)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setLocation,
@@ -68,7 +68,7 @@ public class RxLocationManager {
         this.location = location;
     }
 
-    private LocationEntity transformEntity(Location location) {
+    private LocationEntity transformLocation(Location location) {
         LocationEntity locationEntity = new LocationEntity();
         locationEntity.setLatitude(location.getLatitude());
         locationEntity.setLongitude(location.getLongitude());
@@ -76,17 +76,23 @@ public class RxLocationManager {
     }
 
     @SuppressWarnings("MissingPermission")
-    @RequiresPermission(anyOf = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
-    private Maybe<Location> lastLocation() {
-        return rxLocation.location().lastLocation()
+    @RequiresPermission(anyOf = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    })
+    private Observable<Location> lastLocation() {
+        return rxLocation.location().lastLocation().toObservable()
                 .doOnSubscribe(ignore -> Timber.d("lastLocation: on subscribe"))
-                .doOnEvent((event, error) -> Timber.d("lastLocation: event: " + event + ", error: " + error))
+                .doOnNext(item -> Timber.d("lastLocation: item: " + item))
                 .doOnComplete(() -> Timber.d("lastLocation: on complete"))
                 .doOnDispose(() -> Timber.d("lastLocation: on dispose"));
     }
 
     @SuppressWarnings("MissingPermission")
-    @RequiresPermission(anyOf = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
+    @RequiresPermission(anyOf = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    })
     private Observable<Location> locationUpdates() {
         return rxLocation.location().updates(locationRequest)
                 .subscribeOn(Schedulers.io())
@@ -96,7 +102,14 @@ public class RxLocationManager {
                 .doOnDispose(() -> Timber.d("locationUpdates: on dispose"));
     }
 
-    private Single<Boolean> locationSettings() {
+    private Single<Boolean> locationSettingsCheck(boolean enabled) {
+        if (!enabled) {
+            return Observable.just(Boolean.TRUE).singleOrError()
+                    .doOnSubscribe(ignore -> Timber.d("locationSettings.disabled: on subscribe"))
+                    .doOnEvent((event, error) -> Timber.d("locationSettings.disabled: event: " + event + ", error: " + error))
+                    .doOnSuccess(ignore -> Timber.d("locationSettings.disabled: on success"))
+                    .doOnDispose(() -> Timber.d("locationSettings.disabled: on dispose"));
+        }
         return rxLocation.settings().checkAndHandleResolution(locationRequest)
                 .doOnSubscribe(ignore -> Timber.d("locationSettings: on subscribe"))
                 .doOnEvent((event, error) -> Timber.d("locationSettings: event: " + event + ", error: " + error))

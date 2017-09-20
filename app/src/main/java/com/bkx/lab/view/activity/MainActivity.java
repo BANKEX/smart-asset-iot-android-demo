@@ -121,6 +121,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     private String scannedContent;
 
     private boolean isStartingIntro;
+    private boolean isLocationPermissionDeniedForeverShown;
+    private boolean isLocationSettingsCheckAsked;
 
     private static final int TAKE_PHOTO = 2;
 
@@ -295,8 +297,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
     @Override
     public void onUnregistered() {
         presenter.clear();
-        enableAllViews(false, shakeLayout, shakeTitleLayout);
-        enablePhotoViews(false);
+        enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
     @Override
@@ -364,26 +365,15 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (presenter.validate(value)) {
             presenter.register(value);
             showLoading(true);
-            enableAllViews(false, shakeLayout, shakeTitleLayout);
-            enablePhotoViews(false);
+            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
         } else {
             assetIdEditContainer.setError(getString(R.string.error_get_asset_id));
         }
 
     }
 
-
     @NeedsPermission({Manifest.permission.CAMERA})
     void takeAPhoto() {
-        if (isLocationDisabled()) {
-            Snackbar snackbar = Snackbar.make(buttonContainer, R.string.location_disabled_message,
-                    Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(getString(android.R.string.ok),
-                    v -> snackbar.dismiss());
-            snackbar.show();
-            return;
-        }
-        getLastLocation();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
             Observable.just(this)
@@ -401,35 +391,33 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         }
     }
 
-    public void getLastLocation() {
-        presenter.onLocationChanged(locationManager.getLocation());
-    }
-
-
     @OnNeverAskAgain({Manifest.permission.CAMERA})
     void showCameraPermissionDeniedForever() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(R.string.permission_dialog_message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                }).setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
+                .setPositiveButton(R.string.ok, null)
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @OnPermissionDenied({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showLocationPermissionDenied() {
-        enablePhotoViews(false);
-        Snackbar.make(buttonContainer, R.string.location_permission_not_granted_message, Snackbar.LENGTH_LONG)
-                .show();
+        Snackbar.make(buttonContainer, R.string.location_permission_not_granted_message,
+                Snackbar.LENGTH_LONG).show();
     }
 
     @OnNeverAskAgain({Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION})
     void showLocationPermissionDeniedForever() {
-        enablePhotoViews(false);
+        if (isLocationPermissionDeniedForeverShown) {
+            return;
+        }
+        isLocationPermissionDeniedForeverShown = true;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.permission_dialog_title)
                 .setMessage(R.string.location_permission_not_granted_message)
-                .setPositiveButton(android.R.string.ok, null).show();
+                .setPositiveButton(R.string.ok, null)
+                .show();
     }
 
     @Override
@@ -441,7 +429,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
                     return;
                 }
                 photoProgressBar.setVisibility(View.VISIBLE);
-                presenter.uploadFile(this);
+                presenter.uploadFile(this, locationManager.getLocation());
             } catch (Exception e) {
                 e.printStackTrace();
                 onPhotoUploadFail("");
@@ -498,8 +486,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
             showAssetId(presenter.getDeviceId());
             assetIdEdit.clearFocus();
         } else {
-            enableAllViews(false, shakeLayout, shakeTitleLayout);
-            enablePhotoViews(false);
+            enableAllViews(false, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
         }
         if (!scannedContentReceived) {
             return;
@@ -527,8 +514,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         if (!isLocationPermissionsGranted()) {
             return;
         }
-        enablePhotoViews(DataBaseHelper.getInstance().isDeviceRegistered());
-        locationManager.startLocationUpdates();
+        locationManager.startLocationUpdates(!isLocationSettingsCheckAsked);
+        isLocationSettingsCheckAsked = true;
     }
 
     private void stopLocationUpdates() {
@@ -553,12 +540,7 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, Notificat
         Snackbar.make(buttonContainer, R.string.register_success, Snackbar.LENGTH_SHORT)
                 .show();
         showLoading(false);
-        enableAllViews(true, shakeLayout, shakeTitleLayout);
-        enablePhotoViews(true);
-    }
-
-    private void enablePhotoViews(boolean enabled) {
-        enableAllViews(enabled && isLocationPermissionsGranted(), photoLayout, photoTitleLayout);
+        enableAllViews(true, shakeLayout, shakeTitleLayout, photoLayout, photoTitleLayout);
     }
 
     @Override

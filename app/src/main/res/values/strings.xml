@@ -5,8 +5,8 @@
     <string name="dialog_title">No internet connection</string>
     <string name="dialog_message">Try:\n\t\u2022 Turning off airplane mode\n\t\u2022 Turning on mobile data or Wi-Fi\n\t\u2022 Checking the signal in your area</string>
     <string name="permission_dialog_message">This action needs permissions</string>
-    <string name="location_disabled_message">Location is disabled</string>
-    <string name="location_permission_not_granted_message">Application needs permissions to get location to send it later</string>
+    <string name="location_disabled_message">Please enable location settings to send real location</string>
+    <string name="location_permission_not_granted_message">Please grant location permissions to send real location</string>
     <string name="deviceId">Device\'s ID: %s</string>
 
     <string name="action_about_label">About</string>
@@ -42,4 +42,7 @@
     <string name="shake_success">Signal has been successfully sent. Now send geo and photo sensors signal.</string>
     <string name="photo_success">Geo and photo sensors signal has been successfully sent. Now go back to Smart Asset #%s web page and click Collect Sensor Data to process the signals</string>
     <string name="dismiss">Dismiss</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
