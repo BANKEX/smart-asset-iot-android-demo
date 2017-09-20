@@ -51,8 +51,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
     private boolean enabled;
     private boolean canExecute = true;
 
-    private LocationEntity location = new LocationEntity();
-
     private static final int MIN_VALUE = 1;
     private static final int MAX_VALUE = 16777216;
 
@@ -98,7 +96,7 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
         deviceNotificationApi = client.createService(DeviceNotificationApi.class);
     }
 
-    public void uploadFile(Context context) {
+    public void uploadFile(Context context, LocationEntity location) {
         Observable.just(context)
                 .observeOn(Schedulers.newThread())
                 .map((ctx) -> {
@@ -123,7 +121,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
                         view.onError();
                     }
                 });
-
     }
 
     public String getDeviceId() {
@@ -180,11 +177,6 @@ public class MainPresenter extends AbstractPresenter<NotificationView> implement
             }
         }
 
-    }
-
-    public void onLocationChanged(@NonNull Location location) {
-        this.location.setLongitude(location.getLongitude());
-        this.location.setLatitude(location.getLatitude());
     }
 
     private void sendLocationNotification(LocationEntity location, String link) {

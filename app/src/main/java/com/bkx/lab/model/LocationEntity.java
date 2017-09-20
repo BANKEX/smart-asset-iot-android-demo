@@ -1,12 +1,8 @@
 package com.bkx.lab.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class LocationEntity {
 
     private static final double DEFAULT_LATITUDE = 40.710652;
