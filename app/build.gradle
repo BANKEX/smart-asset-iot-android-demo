@@ -9,13 +9,22 @@ android {
         applicationId "com.bkx.lab"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 23
-        versionName "1.0.23"
+        versionCode 24
+        versionName "1.0.24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            storeFile file("../bkx.jks")
+            storePassword 'REPLACE WITH LOCAL PROPERTY'
+            keyAlias 'REPLACE WITH LOCAL PROPERTY'
+            keyPassword 'REPLACE WITH LOCAL PROPERTY'
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
