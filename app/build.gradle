@@ -9,8 +9,8 @@ android {
         applicationId "com.bkx.lab"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 25
-        versionName "1.0.25"
+        versionCode 26
+        versionName "1.0.26"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
