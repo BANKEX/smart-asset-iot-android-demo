@@ -18,6 +18,7 @@ public class ImageManager {
             + "AccountKey=V4JIH4fX6ypbHcStKsugRzPQ2nBK42JSizWMZp2yjj6j0vlzUfdo7MIgHdfPDtqeWz2QH9sBvd+SNhtxIGNy0w==";
     private static final String CONTAINER_NAME = "images";
     private static final String SEPARATOR = "/";
+    public static final String CONTENT_TYPE = "image/jpeg";
 
     private static class InstanceHolder {
         static final ImageManager INSTANCE = new ImageManager();
@@ -48,8 +49,9 @@ public class ImageManager {
         CloudBlobContainer container = getContainer();
         container.createIfNotExists();
         CloudBlockBlob imageBlob = container.getBlockBlobReference(imageName);
-        imageBlob.upload(image, imageLength);
+        imageBlob.getProperties().setContentType(CONTENT_TYPE);
 
+        imageBlob.upload(image, imageLength);
         return getLink(imageName, container);
 
     }
